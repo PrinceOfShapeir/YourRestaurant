@@ -25,40 +25,49 @@ class ShoppingCart extends Component {
             this.addToCart(item.name, item.quantity);
         }
     }
-/*
+
     UNSAFE_componentWillReceiveProps(nextProps){
 
-        if(nextProps!==this.props)
+        //console.log(nextProps.shoppingCartItem.name);
+        if(nextProps!==this.props) {
+            
+            this.addFromProps(nextProps.shoppingCartItem);
+        }
 
-        this.addFromProps(nextProps.shoppingCartItem);
 
-
-    }*/
+    }
 
     
     addToCart = (itemName, quantity) => {
+        console.log(itemName + quantity);
 
-        this.setState({[itemName]: {
-            quantity: (this.state.quantity>0) ? quantity + this.state.itemName.quantity: quantity
-            }});
+        let item = {name:itemName, quantity: (this.state[itemName]) ? quantity + this.state[itemName].quantity: quantity};
+        this.setState({[itemName]: item}, ()=>this.generateCart());
 
     }
     generateCart = () => {
+        console.log("running gen cart");
         let shoppingCartText = [];
         
+        let counter = 0;
         for(let i in this.state){
-            if(this.state.i.quantity>0){
-            shoppingCartText.concat({
+            console.log(i);
+            if(this.state[i].quantity>0&&i!=='shoppingCartText'){
+
+                console.log("should be adding" + this.state[i].quantity + ' ' + i + " " + counter);
+            shoppingCartText.push({
                 
-                id: this.state.i.id,
+                id: counter,
                 title: i,
-                quantity: this.state.i.quantity
+                quantity: this.state[i].quantity
 
             });
+            counter++;
             }
         }
+        //console.log(shoppingCartText[0]);
 
-        return shoppingCartText;
+        this.setState({shoppingCartText}, ()=> console.log(this.state.shoppingCartText));
 
         
     }
@@ -70,9 +79,13 @@ class ShoppingCart extends Component {
 
     CartItems = ({cartItem}) => {
 
+        if(cartItem){
         return (    
         <Text>{`${cartItem.title}: ${cartItem.quantity}`}</Text>
         );
+    }
+
+    else console.log(cartItem);
     }
 
     render(){
@@ -82,12 +95,14 @@ class ShoppingCart extends Component {
 
             <SafeAreaView>
             <Text>Your Order:</Text>
-            <FlatList
-                data={this.generateCart}
+
+            
+            {/*<FlatList
+                data={this.state.shoppingCartText}
                 renderItem={this.CartItems}
                 keyExtractor={(item)=>item.id}
-                >
-            </FlatList>
+            >
+            </FlatList>*/}
             </SafeAreaView>
         );
     }

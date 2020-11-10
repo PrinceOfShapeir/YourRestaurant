@@ -17,7 +17,7 @@ class Main extends Component {
         }
     }
 
-    addToCart = (item, qty = 0) => {
+    addToCart = (item, qty = 1) => {
 
         //console.log(item);
 
@@ -25,7 +25,7 @@ class Main extends Component {
             let shoppingCartItem = {...this.state.shoppingCartItem}
             shoppingCartItem.name = item.name;
             shoppingCartItem.quantity = qty;
-            this.setState({shoppingCartItem}, ()=>console.log(this.state.shoppingCartItem.name));
+            this.setState({shoppingCartItem}/*, ()=>console.log(this.state.shoppingCartItem.name)*/);
         }
 
 
@@ -36,11 +36,11 @@ class Main extends Component {
     render(){
         return (
             <View>
-                {/*
+                
                 <ShoppingCart 
                     menu={this.state.menu}
                     shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
-                />*/}
+                />
                 <Menu 
                     menu={this.state.menu}
                     addToCart={this.addToCart}
