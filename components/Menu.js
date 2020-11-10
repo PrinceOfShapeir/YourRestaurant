@@ -10,13 +10,13 @@ const jpeg = '.jpg';
 
 function Menu (props) {
 
-    //let {menu, addToCart} = props;
-    let {menu} = props;
-
+    let {menu, addToCart} = props;
+    //let {menu} = props;
+/*
     const addToCart = (item, quantity=1) => {
         console.log("Adding " + quantity + " " + item.name + " to the cart.");
     }
-
+*/
     const AddItem = ({newItem}) => {
         //do something
     }
@@ -56,7 +56,7 @@ function Menu (props) {
     
     const RenderMenu = ({menu}) => {
 
-        console.log('rendering menu' + Object.values(menu));
+        //console.log('rendering menu' + Object.values(menu));
 
         return (
             <View>

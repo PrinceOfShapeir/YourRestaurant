@@ -13,20 +13,24 @@ class Main extends Component {
             //menulist is an array of objects
             //e.g. [{id, name, imageName, description, priceDefault}]
             menu: MENULIST,
-            shoppingCartItem: null 
+            shoppingCartItem: {} 
         }
     }
 
     addToCart = (item, qty = 0) => {
 
+        //console.log(item);
+
         if(item){
-            this.setState({shoppingCartItem: {
-                name: item.name,
-                quantity: (qty>0) ? qty : 1
-            }});
+            let shoppingCartItem = {...this.state.shoppingCartItem}
+            shoppingCartItem.name = item.name;
+            shoppingCartItem.quantity = qty;
+            this.setState({shoppingCartItem}, ()=>console.log(this.state.shoppingCartItem.name));
         }
 
+
     }
+
 
 
     render(){
@@ -39,7 +43,7 @@ class Main extends Component {
                 />*/}
                 <Menu 
                     menu={this.state.menu}
-                    /*addToCart={this.addToCart}*/
+                    addToCart={this.addToCart}
                     />
             </View>
             
