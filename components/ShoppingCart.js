@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, Modal, SafeAreaView, FlatList} from 'react-native';
+import {Text, View, Modal, SafeAreaView, FlatList, Button} from 'react-native';
 //import MENULIST from '../shared/menuList';
 
 class ShoppingCart extends Component {
@@ -77,7 +77,7 @@ class ShoppingCart extends Component {
 
     }
 
-    CartItems = ({item}) => {
+    CartItems = ({item}) => {//item is a harcoded prop from flatlist, breaks without
         let {title, quantity} = item;
         //console.log("rendering cart item" + Object.values(cartItem));
         console.log(quantity);
@@ -87,9 +87,20 @@ class ShoppingCart extends Component {
         <Text>{`${title}: ${quantity}`}</Text>
         );
         
-    }
+    } 
 
-else return <Text>Could Not Load Item {title}</Text>
+        else return <Text>Could Not Load Item {title}</Text>
+        }
+
+    sendOrderEmail = () => {
+
+        //let email = JSON.parse(JSON.stringify(this.state));
+        //easier to just use shoppingCartText
+
+        console.log('sending order email ' + this.state.shoppingCartText);
+
+
+
     }
 
     render(){
@@ -97,14 +108,20 @@ else return <Text>Could Not Load Item {title}</Text>
         return(
 
 
-            <SafeAreaView style={{marginTop: 40}}>
-            <Text>Your Order:</Text>            
+            <SafeAreaView 
+                style={{marginTop: 40, flexDirection: 'row'}}                
+                >
+            <Text>Your Order:   </Text>            
             <FlatList
                 data={this.state.shoppingCartText}
                 renderItem={this.CartItems}
-                keyExtractor={(item)=>item.id}
+                keyExtractor={(item)=>item.id.toString()}//expects string
             >
             </FlatList>
+            <Button
+                title='Send Order Request'
+                onPress={()=>this.sendOrderEmail()}
+                />
             </SafeAreaView>
         );
     }
