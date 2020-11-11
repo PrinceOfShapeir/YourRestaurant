@@ -6,16 +6,15 @@ import Main from './components/Main';
 
 export default function App() {
   return (
-    <View>
+    
       <Main />
-      {/*<Image source={require('./assets/img/bread.jpg')}/>*/}
-    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  Container: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

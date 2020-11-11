@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {SafeAreaView} from 'react-native';
 import MENULIST from '../shared/menuList';
 import Menu from './Menu';
 import ShoppingCart from './ShoppingCart';
@@ -35,7 +36,7 @@ class Main extends Component {
 
     render(){
         return (
-            <View>
+            <SafeAreaView>
                 
                 <ShoppingCart 
                     menu={this.state.menu}
@@ -45,7 +46,7 @@ class Main extends Component {
                     menu={this.state.menu}
                     addToCart={this.addToCart}
                     />
-            </View>
+            </SafeAreaView>
             
             //<Text>Menu</Text>
         );

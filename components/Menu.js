@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import MENULIST from '../shared/menuList';
-import {Text, View, ScrollView, FlatList, Image, Button} from 'react-native';
+import {Text, View, ScrollView, FlatList, Image, Button, SafeAreaView} from 'react-native';
 import {Card, Icon} from 'react-native-elements';
 //import {images} from './img/';
 
@@ -29,8 +29,8 @@ function Menu (props) {
 
            
             
-          
-            <Card style={{flex:1}}
+          <View>
+            <Card /*style={{flex:1}}*/
                >
                 <Card.Title>{item.id}</Card.Title>
 
@@ -47,6 +47,7 @@ function Menu (props) {
                     onPress={()=>addToCart(item)}/>
 
             </Card>
+            </View>
           
           
 
@@ -59,36 +60,35 @@ function Menu (props) {
         //console.log('rendering menu' + Object.values(menu));
 
         return (
-            <View>
-            <Card>
-                <Card.Title>Menu</Card.Title>
-                
-            </Card>
-            <FlatList
-                data={Object.values(menu)}
-                renderItem={MenuItems}
-                keyExtractor={(item)=>item.id}
-                >
-            </FlatList>
             
-            {/*             
-            <AddItem />
-            */}
-            </View>
+            
+            
+                <FlatList
+
+                    style={{flexGrow: 3, flexDirection: 'column', marginBottom: 100}}    
+                    data={Object.values(menu)}
+                    renderItem={MenuItems}
+                    keyExtractor={(item)=>item.id}
+                    ListHeaderComponent={<Card>
+                        <Card.Title>Menu</Card.Title>
+                        
+                    </Card>}
+                    >
+                </FlatList>
         
         );
 
     };
 
     return (
-        <View>
+        
             
             <RenderMenu 
                 menu={menu}
                 />
-            {/*<Text>Menu</Text>*/}
+            
 
-        </View>
+        
     );
 } 
 
