@@ -41,7 +41,7 @@ class ShoppingCart extends Component {
     addToCart = (itemName, quantity) => {
         console.log(itemName + quantity);
 
-        let item = {name:itemName, quantity: (this.state[itemName]) ? quantity + this.state[itemName].quantity: quantity};
+        let item = {...this.state[itemName], name:itemName, quantity: (this.state[itemName]) ? quantity + this.state[itemName].quantity: quantity};
         this.setState({[itemName]: item}, ()=>this.generateCart());
 
     }
@@ -77,15 +77,19 @@ class ShoppingCart extends Component {
 
     }
 
-    CartItems = ({cartItem}) => {
+    CartItems = ({item}) => {
+        let {title, quantity} = item;
+        //console.log("rendering cart item" + Object.values(cartItem));
+        console.log(quantity);
 
-        if(cartItem){
+        if(title&&quantity>0){
         return (    
-        <Text>{`${cartItem.title}: ${cartItem.quantity}`}</Text>
+        <Text>{`${title}: ${quantity}`}</Text>
         );
+        
     }
 
-    else console.log(cartItem);
+else return <Text>Could Not Load Item {title}</Text>
     }
 
     render(){
@@ -93,16 +97,14 @@ class ShoppingCart extends Component {
         return(
 
 
-            <SafeAreaView>
-            <Text>Your Order:</Text>
-
-            
-            {/*<FlatList
+            <SafeAreaView style={{marginTop: 40}}>
+            <Text>Your Order:</Text>            
+            <FlatList
                 data={this.state.shoppingCartText}
                 renderItem={this.CartItems}
                 keyExtractor={(item)=>item.id}
             >
-            </FlatList>*/}
+            </FlatList>
             </SafeAreaView>
         );
     }
