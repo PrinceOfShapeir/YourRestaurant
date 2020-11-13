@@ -3,7 +3,7 @@ import {SafeAreaView} from 'react-native';
 import MENULIST from '../shared/menuList';
 import Menu from './Menu';
 import ShoppingCart from './ShoppingCart';
-
+import * as MailComposer from 'expo-mail-composer';
 import {Text, View, ScrollView, FlatList} from 'react-native';
 
 class Main extends Component {
@@ -14,9 +14,27 @@ class Main extends Component {
             //menulist is an array of objects
             //e.g. [{id, name, imageName, description, priceDefault}]
             menu: MENULIST,
-            shoppingCartItem: {} 
+            shoppingCartItem: {},
+            storeId: 'dummy_id',
+            storeEmail:'dummyEmail@dummy.dummy'
         }
     }
+
+
+    sendEmail = (items) => {
+
+
+        MailComposer.composeAsync({
+            subject: 'New Order',
+            body: items,
+            recipients: [this.state.storeEmail],
+            isHtml: true
+        });
+
+
+    }
+
+
 
     addToCart = (item, qty = 1) => {
 
@@ -41,6 +59,7 @@ class Main extends Component {
                 <ShoppingCart 
                     menu={this.state.menu}
                     shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
+                    sendEmail={this.sendEmail}
                 />
                 <Menu 
                     menu={this.state.menu}

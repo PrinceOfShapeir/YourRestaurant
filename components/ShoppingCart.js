@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Text, View, Modal, SafeAreaView, FlatList, Button} from 'react-native';
+import {Text, View, Modal, SafeAreaView, FlatList, Button, Alert} from 'react-native';
+
 //import MENULIST from '../shared/menuList';
 
 class ShoppingCart extends Component {
@@ -18,9 +19,11 @@ class ShoppingCart extends Component {
         this.state = listifiedMenu;
     }
 
+
+
     addFromProps = (item) => {
 
-        if(item!=null){
+        if(item.name){
 
             this.addToCart(item.name, item.quantity);
         }
@@ -77,6 +80,26 @@ class ShoppingCart extends Component {
 
     }
 
+    emailIsSending = (items) => {
+
+        this.props.sendEmail(items);
+
+        Alert.alert(
+            "Email Sent",
+            items + "were sent.",
+            [
+                {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+                },
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: true }
+            );
+        
+    }
+
     CartItems = ({item}) => {//item is a harcoded prop from flatlist, breaks without
         let {title, quantity} = item;
         //console.log("rendering cart item" + Object.values(cartItem));
@@ -97,8 +120,25 @@ class ShoppingCart extends Component {
         //let email = JSON.parse(JSON.stringify(this.state));
         //easier to just use shoppingCartText
 
-        console.log('sending order email ' + this.state.shoppingCartText);
+        Alert.alert(
+            "Send Order Email?",
+            JSON.stringify(this.state.shoppingCartText) + "?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => {console.log("Cancel Pressed")},
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => {
+                  console.log("OK Pressed"); 
+                  console.log('sending order email ' + this.state.shoppingCartText);
+                  this.emailIsSending(JSON.stringify(this.state.shoppingCartText));                
+                }}
+            ],
+            { cancelable: true }
+          );
 
+        
 
 
     }
