@@ -100,6 +100,24 @@ class ShoppingCart extends Component {
         
     }
 
+    clearCart = () => {
+
+        for(let i in this.state){
+            if(this.state[i].hasOwnProperty('quantity')){
+
+                if(this.state[i].quantity>0){
+                    this.setState({[i]: {...this.state[i], quantity: 0}});
+                }
+
+            }
+
+        }
+
+        setTimeout(()=>this.generateCart(), 100);
+        
+
+    }
+
     CartItems = ({item}) => {//item is a harcoded prop from flatlist, breaks without
         let {title, quantity} = item;
         //console.log("rendering cart item" + Object.values(cartItem));
@@ -151,7 +169,13 @@ class ShoppingCart extends Component {
             <SafeAreaView 
                 style={{marginTop: 40, flexDirection: 'row'}}                
                 >
-            <Text>Your Order:   </Text>            
+            <View>
+                <Text>Your Order:   </Text>
+                <Button 
+                    title='Clear Cart'
+                    onPress={()=>this.clearCart()}
+                    />
+                </View>        
             <FlatList
                 data={this.state.shoppingCartText}
                 renderItem={this.CartItems}
