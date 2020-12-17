@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import MENULIST from '../shared/menuList';
-import {Text, View, ScrollView, FlatList, Image, Button, SafeAreaView} from 'react-native';
+import {Text, View, ScrollView, FlatList, Image, Button, SafeAreaView, TouchableOpacity, Alert} from 'react-native';
 import {Card, Icon} from 'react-native-elements';
 //import {images} from './img/';
 
@@ -10,7 +10,7 @@ const jpeg = '.jpg';
 
 function Menu (props) {
 
-    let {menu, addToCart} = props;
+    let {menu, addToCart, toggleModal} = props;
     //let {menu} = props;
 /*
     const addToCart = (item, quantity=1) => {
@@ -19,6 +19,11 @@ function Menu (props) {
 */
     const AddItem = ({newItem}) => {
         //do something
+    }
+
+    const imageSizer =  ({imageName}) => {
+
+
     }
 
     const MenuItems = ({item}) => {
@@ -32,16 +37,23 @@ function Menu (props) {
           <View>
             <Card /*style={{flex:1}}*/
                >
-                <Card.Title>{item.id}</Card.Title>
+                <Card.Title>{item.id.replace('-', " ")}</Card.Title>
+            <View style={{flexDirection: 'row'}}>
+                <View>
+                    <Text
+                        style={{fontWeight: 'bold', fontSize:15}}
+                    >{item.name}</Text>
 
-                <Text>{item.imageName}</Text>
-                <Image style={{width: 50, height: 50}}
-                source={{uri: baseUrl + item.imageName + jpeg}}
-               />
-               
-                <Text>{`$ ${item.price}`}</Text>
+                    <Image style={{width: 50, height: 50}}
+                    source={{uri: baseUrl + item.imageName + jpeg}}
+                    />
+                </View>  
+                <View>
+                    <Text style={{marginTop:20, marginLeft: 10}}>{item.description}</Text>
+                    <Text style={{marginTop:5, marginLeft: 15}}>Only {item.price} bucks!</Text>
+                </View>          
 
-                <Text>Item</Text>
+                </View>
                 <Button
                     title='Add To Cart'
                     onPress={()=>addToCart(item)}/>

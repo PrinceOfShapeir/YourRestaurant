@@ -10,13 +10,15 @@ class ShoppingCart extends Component {
         super(props);
         let listifiedMenu = {};
         for(let i in props.menu){
-            let name = props.menu[i].imageName;
-            let price = props.menu[i].imageName;
+            let name = props.menu[i].name;
+            let price = props.menu[i].price;
             let id = props.menu[i].id;
             listifiedMenu[name] = {quantity: 0, price, id};
         }
+        let sumTotal = {sumTotal: 0};
 
-        this.state = listifiedMenu;
+        this.state = { ...sumTotal, ...listifiedMenu};
+
     }
 
 
@@ -25,7 +27,7 @@ class ShoppingCart extends Component {
 
         if(item.name){
 
-            this.addToCart(item.name, item.quantity);
+            this.addToCart(item.name, item.quantity, item.price);
         }
     }
 
@@ -41,12 +43,13 @@ class ShoppingCart extends Component {
     }
 
     
-    addToCart = (itemName, quantity) => {
+    addToCart = (itemName, quantity, price=5) => {
         console.log(itemName + quantity);
 
         let item = {...this.state[itemName], name:itemName, quantity: (this.state[itemName]) ? quantity + this.state[itemName].quantity: quantity};
         this.setState({[itemName]: item}, ()=>this.generateCart());
-
+        this.setState({sumTotal: this.state.sumTotal + quantity * price});
+        console.log("adding ", quantity, "times", price, "to", this.state.sumTotal);
     }
     generateCart = () => {
         console.log("running gen cart");
@@ -55,7 +58,7 @@ class ShoppingCart extends Component {
         let counter = 0;
         for(let i in this.state){
             console.log(i);
-            if(this.state[i].quantity>0&&i!=='shoppingCartText'){
+            if(i!=='shoppingCartText'&&i!=='sumTotal'&&this.state[i].quantity>0){
 
                 console.log("should be adding" + this.state[i].quantity + ' ' + i + " " + counter);
             shoppingCartText.push({
@@ -113,6 +116,8 @@ class ShoppingCart extends Component {
 
         }
 
+        this.setState({sumTotal: 0});
+
         setTimeout(()=>this.generateCart(), 100);
         
 
@@ -138,9 +143,16 @@ class ShoppingCart extends Component {
         //let email = JSON.parse(JSON.stringify(this.state));
         //easier to just use shoppingCartText
 
+        let alertText = []
+
+        for(let i in this.state.shoppingCartText){
+            alertText.push(`${this.state.shoppingCartText[i].quantity} ${this.state.shoppingCartText[i].title}`)
+        }
+
         Alert.alert(
-            "Send Order Email?",
-            JSON.stringify(this.state.shoppingCartText) + "?",
+            `Send Order Email? Your total is ${this.state.sumTotal}$ You have the following items:`,
+    
+            `${alertText.toString().replace(',', ' ')}`,
             [
               {
                 text: "Cancel",
@@ -170,7 +182,7 @@ class ShoppingCart extends Component {
                 style={{marginTop: 40, flexDirection: 'row'}}                
                 >
             <View>
-                <Text>Your Order:   </Text>
+                <Text>Your Order:</Text>
                 <Button 
                     title='Clear Cart'
                     onPress={()=>this.clearCart()}
@@ -182,10 +194,14 @@ class ShoppingCart extends Component {
                 keyExtractor={(item)=>item.id.toString()}//expects string
             >
             </FlatList>
-            <Button
-                title='Send Order Request'
-                onPress={()=>this.sendOrderEmail()}
-                />
+            <View>
+                <Button
+                    title='Send Order Request'
+                    onPress={()=>this.sendOrderEmail()}
+                    />
+                <Text>Your total is: ${this.state.sumTotal}</Text>
+            </View>
+           
             </SafeAreaView>
         );
     }

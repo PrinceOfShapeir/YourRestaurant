@@ -1,0 +1,53 @@
+{
+"openapi": "3.0",
+"info": {
+    "description": "Simple Menus",
+    "title": "Simple Menus",
+    "version": "0.1",
+    "contact": {
+        "name": "Sean Farley",
+        "url": "https://github.com/PrinceOfShapeir/YourRestaurant"
+    }
+},
+"servers": [{
+    "url": "local",
+    "description": "Development Server",
+    "variables": {
+        "port": {
+            "enum": [
+                "3000"
+            ],
+            "default" :"3000"
+        }
+    }
+}],
+"paths": {
+    "/restaurants": {
+        "get": {
+            "description": "list of hosted restaurants, for now, see routes.pdf, which this current document shall replace",
+            "responses": {
+              "200": {          
+                "description": "A  description.",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/restaurants"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+},
+"components": {},
+"security": [{}],
+"tags": [{}],
+"externalDocs": {
+    "routes": "routes.pdf",
+    "schemas": "../expressServer/models"
+}
+}
