@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import {SafeAreaView, Button} from 'react-native';
 import MENULIST from '../shared/menuList';
 import Menu from './Menu';
 import ShoppingCart from './ShoppingCart';
 import OwnerFlow from './OwnerFlow';
 import * as MailComposer from 'expo-mail-composer';
-import {Text, View, ScrollView, FlatList} from 'react-native';
+import {Text, View, ScrollView, FlatList, SafeAreaView, Button} from 'react-native';
 
 class Main extends Component {
     constructor(props){
@@ -53,6 +52,39 @@ class Main extends Component {
 
     }
 
+    returnHome = () => {
+        //console.log("returning home");
+        this.setState({
+            customer: false,
+            owner: false
+        });
+        console.log(this.state.customer||this.state.owner);
+    }
+
+    ownerView = () => {
+
+        return (
+            <SafeAreaView>
+                
+                <Button 
+                        onPress={this.returnHome}
+                        title=""
+                        color="#000000"
+                        />
+                
+                <Button 
+                        onPress={this.returnHome}
+                        title="Return"
+                        />
+
+                        <Text>{this.state.customer||this.state.owner}</Text>
+
+
+            </SafeAreaView>
+        )
+
+    }
+
     customerView = () => {
         return (
                 <SafeAreaView>
@@ -62,10 +94,15 @@ class Main extends Component {
                         shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
                         sendEmail={this.sendEmail}
                     />
+                    <Button 
+                        onPress={this.returnHome}
+                        title="Return"
+                        />
                     <Menu 
                         menu={this.state.menu}
                         addToCart={this.addToCart}
                         />
+
                 </SafeAreaView>
         )
     }
@@ -82,22 +119,38 @@ class Main extends Component {
     identifier = () => {
 
         return (
-            <> 
-                <Button onPress={this.customer}>
-                    Customer
-                    </Button>
-                    <Button onPress={this.owner}>
-                    Owner
-                </Button>
-            </>
+            <SafeAreaView style={{
+                
+                flex:1,
+                justifyContent: "center",
+                textAlign: "center"
+                
+                }}> 
+                
+                <Text>Are you a</Text>
+                
+                <Button onPress={this.customer} 
+                    title="Customer?"
+                    
+                />
+
+                <Text>Or an</Text>
+                <Button onPress={this.owner}
+                    title="Owner?"  
+                    
+                />
+                
+            </SafeAreaView>
 
         )
     }
 
     chosenView = () => {
 
+        console.log("view is chosen");
+
         return (
-            (this.state.customer) ? this.customerView : <OwnerFlow />
+            (this.state.customer) ? this.customerView() : this.ownerView()
         )
 
     }
@@ -106,9 +159,9 @@ class Main extends Component {
     render(){
         return (
 
-            <SafeAreaView>
+            <SafeAreaView style={{height: "100%"}}>
 
-                {(!this.state.customer&&!this.state.owner) ? this.identifier : this.chosenView}
+                {(this.state.customer||this.state.owner) ? this.chosenView() : this.identifier()}
                 
             </SafeAreaView>
 
