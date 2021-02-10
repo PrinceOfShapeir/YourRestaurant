@@ -79,6 +79,8 @@ class Main extends Component {
 
                         <Text>{this.state.customer||this.state.owner}</Text>
 
+                <OwnerFlow />
+
 
             </SafeAreaView>
         )
