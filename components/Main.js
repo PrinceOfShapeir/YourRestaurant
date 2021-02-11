@@ -18,7 +18,8 @@ class Main extends Component {
             storeId: 'dummy_id',
             storeEmail:'dummyEmail@dummy.dummy',
             customer: false,
-            owner: false
+            owner: false,
+            ownerState: "signed out"
         }
     }
 
@@ -33,6 +34,18 @@ class Main extends Component {
             isHtml: true
         });
 
+
+    }
+
+    registrationStatus = () => {
+
+            return this.state.ownerState;
+
+    }
+
+    registrationStatusChange = (newStatus) => {
+
+        this.setState({ownerState: newStatus});
 
     }
 
@@ -79,7 +92,10 @@ class Main extends Component {
 
                         <Text>{this.state.customer||this.state.owner}</Text>
 
-                <OwnerFlow />
+                <OwnerFlow 
+                    registrationStatus = {this.registrationStatus}
+                    registrationStatusChange = {this.registrationStatusChange}
+                />
 
 
             </SafeAreaView>
