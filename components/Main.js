@@ -95,6 +95,7 @@ class Main extends Component {
                 <OwnerFlow 
                     registrationStatus = {this.registrationStatus}
                     registrationStatusChange = {this.registrationStatusChange}
+                    
                 />
 
 
