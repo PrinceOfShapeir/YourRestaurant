@@ -4,25 +4,72 @@ import {Card, Icon} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import {baseUrl} from '../shared/baseUrl';
 
+const combinedUrl = baseUrl + "owners/"
+
 function ownerFlow (props) {
 
-    const [username, onChangeUserName] = React.useState("Username");
+    const [username, onChangeUserName] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const [loginState, onChangeLoginState] = React.useState("Logged Out");
     const [revealed, onRevealPassword] = React.useState(false);
+    const [user, onUser] = React.useState("");
 
    
 
     const login = () => {
         
-        console.log("Login Request for " + username);
+        //console.log("Login Request for " + username);
 
-        props.registrationStatusChange("Logged In as" + username);
+        //props.registrationStatusChange("Logged In as" + username);
         
         const getLoginAsync = async () => {
             try{
                 let response = await fetch(
-                    baseUrl, {
+                    combinedUrl + "login", {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'text/plain',
+                            'Content-Type': 'text/plain'
+                        },
+                        body: JSON.stringify({
+                            "username":username,
+                            "password":password
+                        })
+                    }
+                );
+
+                let text = await response.text();
+                console.log(text);
+                return onChangeLoginState(text);
+
+            } catch (e) {
+                console.error(e);
+            }
+
+        }
+
+        return getLoginAsync();
+        
+
+    };
+        
+        
+
+        
+        
+
+    
+
+    const register = () => {
+
+
+        //console.log("new store registration");
+        //props.registrationStatusChange("Registered");
+
+        const registerAsync = async () => {
+            try{
+                let response = await fetch(
+                   combinedUrl + "add", {
                         method: 'POST',
                         headers: {
                             Accept: 'application/json',
@@ -36,27 +83,18 @@ function ownerFlow (props) {
                 );
 
                 let json = await response.json();
-                return onChangeLoginState(JSON.stringify(json));
+            
+                return onUser(JSON.stringify(json));
 
             } catch (e) {
                 console.error(e);
             }
 
         }
-        
 
-    };
-        
-        
+        return registerAsync();
 
-        
-        
 
-    
-
-    const register = () => {
-        console.log("new store registration");
-        props.registrationStatusChange("Registered");
     }
 
     return (
@@ -77,6 +115,7 @@ function ownerFlow (props) {
         <TextInput 
             onChangeText={name=>onChangeUserName(name)}
             value={username}
+            placeholder={"Username"}
         />
         <TextInput 
             onChangeText={pass=>onChangePassword(pass)}
