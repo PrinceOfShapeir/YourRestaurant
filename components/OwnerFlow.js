@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import {Text, TextInput, View, ScrollView, FlatList, Image, Button, SafeAreaView, TouchableOpacity, Alert} from 'react-native';
+import React, { Component, useState } from 'react';
+import {Text, TextInput, View, ScrollView, FlatList, Image, Button, SafeAreaView, TouchableOpacity, Alert, Modal} from 'react-native';
 import {Card, Icon} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import {baseUrl} from '../shared/baseUrl';
@@ -8,12 +8,15 @@ const combinedUrl = baseUrl + "owners/"
 
 function ownerFlow (props) {
 
-    const [username, onChangeUserName] = React.useState("");
-    const [password, onChangePassword] = React.useState("");
-    const [loginState, onChangeLoginState] = React.useState("Logged Out");
-    const [revealed, onRevealPassword] = React.useState(false);
-    const [user, onUser] = React.useState("");
-
+    const [username, onChangeUserName] = useState("");
+    const [password, onChangePassword] = useState("");
+    const [loginState, onChangeLoginState] = useState("Logged Out");
+    const [revealed, onRevealPassword] = useState(false);
+    const [user, onUser] = useState("");
+    const [registerModal, registerModalVisible] = useState(false);
+    const [firstName, onChangeFirstName] = useState("");
+    const [lastName, onChangeLastName] = useState("");
+    const [email, onChangeEmail] = useState("");
    
 
     const login = () => {
@@ -56,7 +59,11 @@ function ownerFlow (props) {
         
 
         
-        
+    const toggleRegisterModal = () => {
+
+        registerModalVisible(!registerModal)
+        console.log("register toggled " + registerModal)
+    }
 
     
 
@@ -65,6 +72,8 @@ function ownerFlow (props) {
 
         //console.log("new store registration");
         //props.registrationStatusChange("Registered");
+
+        toggleRegisterModal();
 
         const registerAsync = async () => {
             try{
@@ -106,12 +115,15 @@ function ownerFlow (props) {
         <Text>Welcome Owners.</Text>
         <Text>Would you like to start a new restaurant?</Text>
 
+        <Text>{(user) ? user : ""}</Text>
+
+        <Text>{registerModal}</Text>
+
 
         <Button
         title="Register New Store"
-        onPress={register} 
-        />
-        <Text>Login and manage an existing one?</Text>
+        onPress={toggleRegisterModal} 
+        />        
         <TextInput 
             onChangeText={name=>onChangeUserName(name)}
             value={username}
@@ -124,13 +136,46 @@ function ownerFlow (props) {
             secureTextEntry={revealed===false}
         />
 
+        <Modal
+        animationType="slide"
+        transparent={false}
+        visible={registerModal}
+        onRequestClose={toggleRegisterModal}
+      >
+
+          
+            <TextInput 
+                onChangeText={name=>onChangeFirstName(name)}
+                value={firstName}
+                placeholder={"First Name"}
+            />
+
+            
+
+            <TextInput 
+                onChangeText={name=>onChangeLastName(name)}
+                value={lastName}
+                placeholder={"Last Name"}
+            />
+            <TextInput 
+                onChangeText={email=>onChangeEmail(email)}
+                value={email}
+                placeholder={"Email"}
+            />
+            <Button
+                title="Submit Registration"
+                onPress={register} 
+                />        
+
+
+          </Modal>
         <Button
         title = "Show Password"
         onPress = {() => onRevealPassword(!revealed)}
         />
         
         
-
+        <Text>Login and manage an existing one?</Text>
         <Button
         title="Login"
         onPress={login} 
