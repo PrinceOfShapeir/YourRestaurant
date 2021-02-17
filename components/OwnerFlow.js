@@ -1,8 +1,10 @@
 import React, { Component, useState } from 'react';
 import {Text, TextInput, View, ScrollView, FlatList, Image, Button, SafeAreaView, TouchableOpacity, Alert, Modal} from 'react-native';
-import {Card, Icon} from 'react-native-elements';
+import {Card} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import {baseUrl} from '../shared/baseUrl';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const combinedUrl = baseUrl + "owners/"
 
@@ -18,10 +20,22 @@ function ownerFlow (props) {
     const [lastName, onChangeLastName] = useState("");
     const [email, onChangeEmail] = useState("");
 
+
     const [loginModal, loginModalVisible] = useState(false);
     
    
+    const togglePassword  = () => {
 
+             onRevealPassword(!revealed);
+
+    }
+
+    const PasswordVisibleIcon = () => {
+
+        return (<Ionicons style={{marginTop:10}}
+                    name={(revealed) ? "eye-outline" : "eye-off-outline"} onPress={togglePassword}/>
+                    )
+    }
     const login = () => {
         
         //console.log("Login Request for " + username);
@@ -144,13 +158,20 @@ function ownerFlow (props) {
             onChangeText={name=>onChangeUserName(name)}
             value={username}
             placeholder={"Username"}
-        />
-            <TextInput 
-            onChangeText={pass=>onChangePassword(pass)}
-            value={password}
-            placeholder={"Password"}
-            secureTextEntry={revealed===false}
-        />  
+            />
+            <View style = {{flexDirection: "row"}}>
+
+                <TextInput 
+                    style={{flex:1}}
+                    onChangeText={pass=>onChangePassword(pass)}
+                    value={password}
+                    placeholder={"Password"}
+                    secureTextEntry={revealed===false}
+                />
+
+                {PasswordVisibleIcon()}
+                
+            </View>
             <Button
                 title = "Show Password"
                 onPress = {() => onRevealPassword(!revealed)}
@@ -203,15 +224,24 @@ function ownerFlow (props) {
             value={username}
             placeholder={"Username"}
         />
-            <TextInput 
-            onChangeText={pass=>onChangePassword(pass)}
-            value={password}
-            placeholder={"Password"}
-            secureTextEntry={revealed===false}
-        />  
+            <View style = {{flexDirection: "row"}}>
+
+                <TextInput 
+                    style={{flex:1}}
+                    onChangeText={pass=>onChangePassword(pass)}
+                    value={password}
+                    placeholder={"Password"}
+                    secureTextEntry={revealed===false}
+                />
+
+                {PasswordVisibleIcon()}
+                
+            </View>
+            
+            
             <Button
                 title = "Show Password"
-                onPress = {() => onRevealPassword(!revealed)}
+                onPress = {togglePassword}
                 />
             <Button
                 title="Login"
