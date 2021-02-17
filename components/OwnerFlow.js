@@ -17,6 +17,9 @@ function ownerFlow (props) {
     const [firstName, onChangeFirstName] = useState("");
     const [lastName, onChangeLastName] = useState("");
     const [email, onChangeEmail] = useState("");
+
+    const [loginModal, loginModalVisible] = useState(false);
+    
    
 
     const login = () => {
@@ -63,6 +66,11 @@ function ownerFlow (props) {
 
         registerModalVisible(!registerModal)
         console.log("register toggled " + registerModal)
+    }
+
+    const toggleLoginModal = () => {
+
+        loginModalVisible(!loginModal);
     }
 
     
@@ -124,17 +132,7 @@ function ownerFlow (props) {
         title="Register New Store"
         onPress={toggleRegisterModal} 
         />        
-        <TextInput 
-            onChangeText={name=>onChangeUserName(name)}
-            value={username}
-            placeholder={"Username"}
-        />
-        <TextInput 
-            onChangeText={pass=>onChangePassword(pass)}
-            value={password}
-            placeholder={"Password"}
-            secureTextEntry={revealed===false}
-        />
+        
 
         <Modal
         animationType="slide"
@@ -142,6 +140,21 @@ function ownerFlow (props) {
         visible={registerModal}
         onRequestClose={toggleRegisterModal}
       >
+            <TextInput 
+            onChangeText={name=>onChangeUserName(name)}
+            value={username}
+            placeholder={"Username"}
+        />
+            <TextInput 
+            onChangeText={pass=>onChangePassword(pass)}
+            value={password}
+            placeholder={"Password"}
+            secureTextEntry={revealed===false}
+        />  
+            <Button
+                title = "Show Password"
+                onPress = {() => onRevealPassword(!revealed)}
+                />
 
           
             <TextInput 
@@ -169,17 +182,44 @@ function ownerFlow (props) {
 
 
           </Modal>
-        <Button
-        title = "Show Password"
-        onPress = {() => onRevealPassword(!revealed)}
-        />
+
         
         
         <Text>Login and manage an existing one?</Text>
         <Button
         title="Login"
-        onPress={login} 
+        onPress={toggleLoginModal} 
         />
+
+        <Modal
+            animationType="slide"
+            transparent={false}
+            visible={loginModal}
+            onRequestClose={toggleLoginModal}
+      > 
+        
+            <TextInput 
+            onChangeText={name=>onChangeUserName(name)}
+            value={username}
+            placeholder={"Username"}
+        />
+            <TextInput 
+            onChangeText={pass=>onChangePassword(pass)}
+            value={password}
+            placeholder={"Password"}
+            secureTextEntry={revealed===false}
+        />  
+            <Button
+                title = "Show Password"
+                onPress = {() => onRevealPassword(!revealed)}
+                />
+            <Button
+                title="Login"
+                onPress={login} 
+            />
+
+
+      </Modal>
         </>
         
         )
