@@ -48,8 +48,8 @@ function ownerFlow (props) {
                     combinedUrl + "login", {
                         method: 'POST',
                         headers: {
-                            Accept: 'text/plain',
-                            'Content-Type': 'text/plain'
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
                             "username":username,
@@ -58,9 +58,9 @@ function ownerFlow (props) {
                     }
                 );
 
-                let text = await response.text();
-                console.log(text);
-                return onChangeLoginState(text);
+                let user = await response.json();
+                console.log(JSON.stringify(user));
+                return onChangeLoginState(JSON.stringify(user));
 
             } catch (e) {
                 console.error(e);
