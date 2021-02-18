@@ -80,15 +80,12 @@ class Main extends Component {
             <SafeAreaView>
                 
                 <Button 
-                        onPress={this.returnHome}
+                        onPress={()=>{}}
                         title=""
                         color="#000000"
                         />
                 
-                <Button 
-                        onPress={this.returnHome}
-                        title="Return"
-                        />
+                
 
                         <Text>{this.state.customer||this.state.owner}</Text>
 
@@ -97,6 +94,10 @@ class Main extends Component {
                     registrationStatusChange = {this.registrationStatusChange}
                     
                 />
+                <Button 
+                        onPress={this.returnHome}
+                        title="Return"
+                        />
 
 
             </SafeAreaView>
@@ -113,13 +114,13 @@ class Main extends Component {
                         shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
                         sendEmail={this.sendEmail}
                     />
-                    <Button 
-                        onPress={this.returnHome}
-                        title="Return"
-                        />
                     <Menu 
                         menu={this.state.menu}
                         addToCart={this.addToCart}
+                        />
+                    <Button 
+                        onPress={this.returnHome}
+                        title="Return"
                         />
 
                 </SafeAreaView>

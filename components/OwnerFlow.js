@@ -12,7 +12,7 @@ function ownerFlow (props) {
 
     const [username, onChangeUserName] = useState("");
     const [password, onChangePassword] = useState("");
-    const [loginState, onChangeLoginState] = useState("Logged Out");
+    const [loginState, onChangeLoginState] = useState(false);
     const [revealed, onRevealPassword] = useState(false);
     const [user, onUser] = useState("");
     const [registerModal, registerModalVisible] = useState(false);
@@ -60,7 +60,7 @@ function ownerFlow (props) {
 
                 let user = await response.json();
                 console.log(JSON.stringify(user));
-                return onChangeLoginState(JSON.stringify(user));
+                return onChangeLoginState(user);
 
             } catch (e) {
                 console.error(e);
@@ -128,38 +128,42 @@ function ownerFlow (props) {
 
     }
 
-    return (
-        <>
-        <Text>{props.registrationStatus()}</Text>
-        
-        <Text>{username}</Text>
-        <Text>{loginState}</Text>
-        <Text>Welcome Owners.</Text>
-        <Text>Would you like to start a new restaurant?</Text>
+    const createRestaurant = () => {
 
-        <Text>{(user) ? user : ""}</Text>
+        console.log("Create restaurant");
+    }
 
-        <Text>{registerModal}</Text>
+    const changeRestaurant = () => {
+
+        console.log("Change restaurant");
+    }
+
+    const loggedOutView = () => {
+
+        return(
+            <>
+
+             <Text>{registerModal}</Text>
 
 
-        <Button
-        title="Register New Store"
-        onPress={toggleRegisterModal} 
-        />        
-        
+            <Button
+            title="Register as a Business Owner"
+            onPress={toggleRegisterModal} 
+            />        
+            
 
-        <Modal
-        animationType="slide"
-        transparent={false}
-        visible={registerModal}
-        onRequestClose={toggleRegisterModal}
-      >
-            <TextInput 
-            onChangeText={name=>onChangeUserName(name)}
-            value={username}
-            placeholder={"Username"}
-            />
-            <View style = {{flexDirection: "row"}}>
+            <Modal
+            animationType="slide"
+            transparent={false}
+            visible={registerModal}
+            onRequestClose={toggleRegisterModal}
+        >
+                <TextInput 
+                onChangeText={name=>onChangeUserName(name)}
+                value={username}
+                placeholder={"Username"}
+                />
+                <View style = {{flexDirection: "row"}}>
 
                 <TextInput 
                     style={{flex:1}}
@@ -171,35 +175,35 @@ function ownerFlow (props) {
 
                 {PasswordVisibleIcon()}
                 
-            </View>
-            <Button
-                title = "Show Password"
-                onPress = {() => onRevealPassword(!revealed)}
-                />
-
-          
-            <TextInput 
-                onChangeText={name=>onChangeFirstName(name)}
-                value={firstName}
-                placeholder={"First Name"}
-            />
+                </View>
+                <Button
+                    title = "Show Password"
+                    onPress = {() => onRevealPassword(!revealed)}
+                    />
 
             
+                <TextInput 
+                    onChangeText={name=>onChangeFirstName(name)}
+                    value={firstName}
+                    placeholder={"First Name"}
+                />
 
-            <TextInput 
-                onChangeText={name=>onChangeLastName(name)}
-                value={lastName}
-                placeholder={"Last Name"}
-            />
-            <TextInput 
-                onChangeText={email=>onChangeEmail(email)}
-                value={email}
-                placeholder={"Email"}
-            />
-            <Button
-                title="Submit Registration"
-                onPress={register} 
-                />        
+                
+
+                <TextInput 
+                    onChangeText={name=>onChangeLastName(name)}
+                    value={lastName}
+                    placeholder={"Last Name"}
+                />
+                <TextInput 
+                    onChangeText={email=>onChangeEmail(email)}
+                    value={email}
+                    placeholder={"Email"}
+                />
+                <Button
+                    title="Submit Registration"
+                    onPress={register} 
+                    />    
 
 
           </Modal>
@@ -250,6 +254,51 @@ function ownerFlow (props) {
 
 
       </Modal>
+            </>
+
+
+        )
+
+
+    }
+
+    const loggedInView = () => {
+        return (
+            <>
+
+                <Text>You have {loginState.ownedRestaurants.length} restaurants.</Text>
+
+                <Button 
+                    title="Create New Restaurant"
+                    onPress={createRestaurant}
+                    />
+
+                {(loginState.ownedRestaurants.length>0) ? 
+                    <Button 
+                        title="Edit Existing Restaurant"
+                        onPress={changeRestaurant}
+                        />    :
+                    <Text></Text>
+            
+                    }
+            </>
+        )
+    }
+
+    return (
+        <>
+        <Text>{props.registrationStatus()}</Text>
+        
+        <Text>{username}</Text>
+        <Text>{JSON.stringify(loginState)}</Text>
+        <Text>Welcome {(loginState) ? loginState.firstName || loginState.username : "Owners"}.</Text>
+        <Text>Would you like to start a new restaurant?</Text>
+
+        <Text>{(user) ? user : ""}</Text>
+
+        {(loginState) ? loggedInView() : loggedOutView()}
+
+       
         </>
         
         )
