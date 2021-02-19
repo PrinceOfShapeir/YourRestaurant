@@ -20,6 +20,10 @@ function ownerFlow (props) {
     const [lastName, onChangeLastName] = useState("");
     const [email, onChangeEmail] = useState("");
 
+    const [createRestaurantModal, createRestaurantModalVisible] = useState(false);
+
+    const [restaurantName, changeRestaurantName] = useState(null);
+
 
     const [loginModal, loginModalVisible] = useState(false);
     
@@ -128,9 +132,11 @@ function ownerFlow (props) {
 
     }
 
-    const createRestaurant = () => {
+    const toggleRestaurantModal = () => {
 
-        console.log("Create restaurant");
+        console.log("Create restaurant view");
+        createRestaurantModalVisible(!createRestaurantModal);
+        console.log(createRestaurantModal.toString());
     }
 
     const changeRestaurant = () => {
@@ -262,6 +268,43 @@ function ownerFlow (props) {
 
     }
 
+    const submitRestaurant = () => {
+
+        (restaurantName) ? console.log(`Preparing to submit ${restaurantName}`) : console.log("Please select a restaurant name.");
+    }
+
+    const createRestaurantModalView = () => {
+
+        return (
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={createRestaurantModalVisible}
+                onRequestClose={toggleRestaurantModal}
+            >
+
+                <TextInput 
+                    onChangeText={name=>changeRestaurantName(name)}
+                    value={restaurantName}
+                    placeholder={"Restaurant Name"}
+                    />
+                <Button
+
+                    onPress={submitRestaurant}
+                    title={`Register ${(restaurantName) ? restaurantName : "your new restaurant."}`}
+                
+                
+                    />
+
+            </Modal>
+        )
+        
+        
+        
+
+         
+    }
+
     const loggedInView = () => {
         return (
             <>
@@ -270,7 +313,7 @@ function ownerFlow (props) {
 
                 <Button 
                     title="Create New Restaurant"
-                    onPress={createRestaurant}
+                    onPress={toggleRestaurantModal}
                     />
 
                 {(loginState.ownedRestaurants.length>0) ? 
@@ -278,9 +321,12 @@ function ownerFlow (props) {
                         title="Edit Existing Restaurant"
                         onPress={changeRestaurant}
                         />    :
-                    <Text></Text>
+                    <></>
             
                     }
+                {createRestaurantModalView()}
+                
+
             </>
         )
     }
