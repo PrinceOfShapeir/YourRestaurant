@@ -6,7 +6,8 @@ import {baseUrl} from '../shared/baseUrl';
 import { Ionicons } from '@expo/vector-icons';
 
 
-const combinedUrl = baseUrl + "owners/"
+const combinedUrl = baseUrl + "owners/";
+const restaurantUrl = baseUrl + "restaurants/";
 
 function ownerFlow (props) {
 
@@ -271,6 +272,42 @@ function ownerFlow (props) {
     const submitRestaurant = () => {
 
         (restaurantName) ? console.log(`Preparing to submit ${restaurantName}`) : console.log("Please select a restaurant name.");
+        
+        toggleRestaurantModal();
+
+        const newRestaurantAsync = async () => {
+            try{
+                let response = await fetch(
+                   restaurantUrl + "add", {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "name":restaurantName,
+                            "username": username,
+                            "email": loginState.email
+                        })
+                    }
+                );
+
+                let json = await response.json();
+
+                let newLoginState = loginState;
+                newLoginState.ownedRestaurants.push(json)
+                console.log(JSON.stringify(newLoginState));
+            
+                return onChangeLoginState(newLoginState);
+
+            } catch (e) {
+                console.error(e);
+            }
+
+        }
+
+        return newRestaurantAsync();
+    
     }
 
     const createRestaurantModalView = () => {
@@ -285,7 +322,7 @@ function ownerFlow (props) {
 
                 <TextInput 
                     onChangeText={name=>changeRestaurantName(name)}
-                    value={restaurantName}
+                    value={restaurantName||""}
                     placeholder={"Restaurant Name"}
                     />
                 <Button
