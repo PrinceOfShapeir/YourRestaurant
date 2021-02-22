@@ -269,6 +269,34 @@ function ownerFlow (props) {
 
     }
 
+    const syncOwners = (updatedState) => {
+
+                const syncOwnersAsync = async () => {
+                    try{
+                        let response = await fetch(
+                        combinedUrl + `update`, {
+                                method: 'PUT',
+                                headers: {
+                                    Accept: 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(updatedState)
+                            }
+                        );
+
+                        let json = await response.json();
+                        console.log(json);
+
+                        } catch (e) {
+                        console.error(e);
+                    }
+
+                    
+                }
+                return syncOwnersAsync();
+
+    }
+
     const submitRestaurant = () => {
 
         (restaurantName) ? console.log(`Preparing to submit ${restaurantName}`) : console.log("Please select a restaurant name.");
@@ -299,6 +327,7 @@ function ownerFlow (props) {
                 newLoginState.ownedRestaurants.push({"name": json.name, "restaurantId": json._id})
                 console.log(JSON.stringify(newLoginState));
                 console.log(typeof newLoginState);
+                syncOwners(newLoginState)
             
                 return onChangeLoginState(newLoginState);
 
