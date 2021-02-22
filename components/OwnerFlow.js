@@ -293,10 +293,12 @@ function ownerFlow (props) {
                 );
 
                 let json = await response.json();
+                console.log(JSON.stringify(json));
 
-                let newLoginState = loginState;
-                newLoginState.ownedRestaurants.push(json)
+                let newLoginState = JSON.parse(JSON.stringify(loginState));
+                newLoginState.ownedRestaurants.push({"name": json.name, "restaurantId": json._id})
                 console.log(JSON.stringify(newLoginState));
+                console.log(typeof newLoginState);
             
                 return onChangeLoginState(newLoginState);
 
