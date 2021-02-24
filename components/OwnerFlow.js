@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import {Text, TextInput, View, ScrollView, FlatList, Image, Button, SafeAreaView, TouchableOpacity, Alert, Modal} from 'react-native';
+import {Text, TextInput, View, StyleSheet, ScrollView, FlatList, Image, Button, SafeAreaView, TouchableOpacity, Alert, Modal} from 'react-native';
 import {Card} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import {baseUrl} from '../shared/baseUrl';
@@ -20,14 +20,18 @@ function ownerFlow (props) {
     const [firstName, onChangeFirstName] = useState("");
     const [lastName, onChangeLastName] = useState("");
     const [email, onChangeEmail] = useState("");
+    
 
     const [createRestaurantModal, createRestaurantModalVisible] = useState(false);
 
     const [restaurantName, changeRestaurantName] = useState(null);
+    
+
 
 
     const [loginModal, loginModalVisible] = useState(false);
     
+
    
     const togglePassword  = () => {
 
@@ -39,6 +43,12 @@ function ownerFlow (props) {
 
         return (<Ionicons style={{marginTop:10}}
                     name={(revealed) ? "eye-outline" : "eye-off-outline"} onPress={togglePassword}/>
+                    )
+    }
+    const editRestaurantIcon = () => {
+
+        return (<Ionicons style={{marginTop:10}}
+                    name={"pencil-outline"}/>
                     )
     }
     const login = () => {
@@ -373,6 +383,27 @@ function ownerFlow (props) {
          
     }
 
+    const renderRestaurantNames = ({item}) => (
+        <SafeAreaView style={styles.rowsWithIcons}>
+            <Text onPress={()=>alertRestaurantClicked(item)}>{item.name}</Text>{editRestaurantIcon()}
+        </SafeAreaView>
+  );
+
+    const alertRestaurantClicked = (clicked) => 
+        Alert.alert(
+            `${clicked.name}`,
+            `${JSON.stringify(clicked)}`,
+            [
+                {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+                },
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: true }
+            );
+
     const loggedInView = () => {
         return (
             <>
@@ -387,11 +418,20 @@ function ownerFlow (props) {
                 {(loginState.ownedRestaurants.length>0) ? 
                     <Button 
                         title="Edit Existing Restaurant"
-                        onPress={changeRestaurant}
+                        onPress={()=>changeRestaurant}
                         />    :
                     <></>
+                    
             
                     }
+                    {(loginState.ownedRestaurants.length>0) ?
+                        <FlatList
+                            data={loginState.ownedRestaurants}
+                            renderItem={renderRestaurantNames}
+                            keyExtractor={(item) => item._id}
+                            /> : <></> 
+                    }
+                
                 {createRestaurantModalView()}
                 
 
@@ -417,5 +457,12 @@ function ownerFlow (props) {
         
         )
 }
+
+const styles = StyleSheet.create({
+    rowsWithIcons: {
+        flexDirection: "row"
+    }
+});
+
 
 export default ownerFlow;
