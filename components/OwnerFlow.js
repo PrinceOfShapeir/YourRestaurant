@@ -384,12 +384,49 @@ function ownerFlow (props) {
     }
 
     const renderRestaurantNames = ({item}) => (
-        <SafeAreaView style={styles.rowsWithIcons}>
-            <Text onPress={()=>alertRestaurantClicked(item)}>{item.name}</Text>{editRestaurantIcon()}
-        </SafeAreaView>
+
+        <Card>
+            <Card.Title>{item.name}</Card.Title>
+            <Button onPress={()=>retrieveRestaurantInfo(item)} title={`Edit ${item.name}`}/>
+
+            <Card.Divider />
+
+        </Card>
+
   );
 
-    const alertRestaurantClicked = (clicked) => 
+    const retrieveRestaurantInfo = (selectedRestaurant) => {
+
+        const retrieveRestaurantInfoAsync = async () => {
+            try{
+                let response = await fetch(
+                   restaurantUrl + `lookup/${selectedRestaurant.restaurantId}`, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                let json = await response.json();
+                console.log(JSON.stringify(json));
+
+                return alertRestaurantClicked(json)
+
+            } catch (e) {
+                console.error(e);
+            }
+
+    }
+
+    return retrieveRestaurantInfoAsync();
+
+}
+
+    const alertRestaurantClicked = (clicked) => {
+
+
         Alert.alert(
             `${clicked.name}`,
             `${JSON.stringify(clicked)}`,
@@ -403,27 +440,18 @@ function ownerFlow (props) {
             ],
             { cancelable: true }
             );
-
+        }
     const loggedInView = () => {
         return (
             <>
-
-                <Text>You have {loginState.ownedRestaurants.length} restaurants.</Text>
 
                 <Button 
                     title="Create New Restaurant"
                     onPress={toggleRestaurantModal}
                     />
 
-                {(loginState.ownedRestaurants.length>0) ? 
-                    <Button 
-                        title="Edit Existing Restaurant"
-                        onPress={()=>changeRestaurant}
-                        />    :
-                    <></>
-                    
-            
-                    }
+                <Text>You have {loginState.ownedRestaurants.length} restaurants.</Text>
+
                     {(loginState.ownedRestaurants.length>0) ?
                         <FlatList
                             data={loginState.ownedRestaurants}
