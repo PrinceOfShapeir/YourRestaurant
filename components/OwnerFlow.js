@@ -11,6 +11,8 @@ const restaurantUrl = baseUrl + "restaurants/";
 
 function ownerFlow (props) {
 
+    //user state
+
     const [username, onChangeUserName] = useState("");
     const [password, onChangePassword] = useState("");
     const [loginState, onChangeLoginState] = useState(false);
@@ -21,15 +23,26 @@ function ownerFlow (props) {
     const [lastName, onChangeLastName] = useState("");
     const [email, onChangeEmail] = useState("");
     
+    //restaurant state
 
     const [createRestaurantModal, createRestaurantModalVisible] = useState(false);
+    const [editRestaurantModalViewVisible, toggleEditRestaurant] = useState(false);
 
     const [restaurantName, changeRestaurantName] = useState(null);
+
+    const [currentlyViewedRestaurant, changeCurrentlyViewedRestaurant] = useState(null);
+    //menu state
+    const [menuItemName, changeMenuItemName] = useState("");
+    const [menuItemPrice, changeMenuItemPrice] = useState("");
     
 
 
 
     const [loginModal, loginModalVisible] = useState(false);
+
+    const toggleEditRestaurantView = () => {
+        toggleEditRestaurant(!editRestaurantModalViewVisible)
+    }
     
 
    
@@ -350,6 +363,47 @@ function ownerFlow (props) {
         return newRestaurantAsync();
     
     }
+    
+    const editRestaurantModalView = () => {
+
+        if (currentlyViewedRestaurant) return (
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={editRestaurantModalViewVisible}
+                onRequestClose={toggleEditRestaurant}
+            >
+                {//change below to some type of list
+                }
+                <Text>{`Welcome ${username}`}</Text>
+                <Text>{`Here is the menu to edit ${currentlyViewedRestaurant.name}`}</Text>
+
+                <Text>{`You have ${currentlyViewedRestaurant.menus.length} menu items.`}</Text>
+                
+                <TextInput 
+                    onChangeText={name=>changeMenuItemName(name)}
+                    value={menuItemName||""}
+                    placeholder={"New Menu Item"}
+                    />
+                <TextInput 
+                    onChangeText={price=> {if (!Number.isNaN(price)) return changeMenuItemPrice(parseFloat(price).toFixed(2))}}
+                    value={menuItemPrice||""}
+                    placeholder={"$0.00"}
+                    />
+                <Button
+
+                    onPress={()=>console.log(`submitting changes to ${JSON.stringify(currentlyViewedRestaurant)} `),
+                     ()=>console.log(JSON.stringify({"name": menuItemName, "price" : menuItemPrice}))}
+                    title={`Submit Change`}
+                
+                
+                    />
+
+            </Modal>
+        )
+        
+
+    }
 
     const createRestaurantModalView = () => {
 
@@ -412,7 +466,7 @@ function ownerFlow (props) {
                 let json = await response.json();
                 console.log(JSON.stringify(json));
 
-                return alertRestaurantClicked(json)
+                return changeCurrentlyViewedRestaurant(json),toggleEditRestaurantView();
 
             } catch (e) {
                 console.error(e);
@@ -459,6 +513,7 @@ function ownerFlow (props) {
                             keyExtractor={(item) => item._id}
                             /> : <></> 
                     }
+                {editRestaurantModalView()}
                 
                 {createRestaurantModalView()}
                 
@@ -469,16 +524,16 @@ function ownerFlow (props) {
 
     return (
         <>
-        <Text>{props.registrationStatus()}</Text>
-        
-        <Text>{username}</Text>
-        <Text>{JSON.stringify(loginState)}</Text>
-        <Text>Welcome {(loginState) ? loginState.firstName || loginState.username : "Owners"}.</Text>
-        <Text>Would you like to start a new restaurant?</Text>
+            <Text>{props.registrationStatus()}</Text>
+            
+            <Text>{username}</Text>
+            <Text>{JSON.stringify(loginState)}</Text>
+            <Text>Welcome {(loginState) ? loginState.firstName || loginState.username : "Owners"}.</Text>
+            <Text>Would you like to start a new restaurant?</Text>
 
-        <Text>{(user) ? user : ""}</Text>
+            <Text>{(user) ? user : ""}</Text>
 
-        {(loginState) ? loggedInView() : loggedOutView()}
+            {(loginState) ? loggedInView() : loggedOutView()}
 
        
         </>
