@@ -34,13 +34,19 @@ function ownerFlow (props) {
     //menu state
     const [menuItemName, changeMenuItemName] = useState("");
     const [menuItemPrice, changeMenuItemPrice] = useState("");
+
+    const [newMenu, createNewMenu] = useState("");
+    const [createMenuModalViewVisible, changeCreateMenuModalView] = useState(false);
+    const [newMenuName, changeNewMenuName] = useState("");
+    const [currentMenu, changeCurrentMenu] = useState(null);
+    const [editRestaurantMenuModalVisible, changeEditRestaurantMenuModalVisibility] = useState(false);
     
 
 
 
     const [loginModal, loginModalVisible] = useState(false);
 
-    const toggleEditRestaurantView = () => {
+    const toggleEditRestaurantMenuView = () => {
         toggleEditRestaurant(!editRestaurantModalViewVisible)
     }
     
@@ -363,7 +369,102 @@ function ownerFlow (props) {
         return newRestaurantAsync();
     
     }
+
+
+        const toggleCreateMenuModal = () => {
+            changeCreateMenuModalView (!createMenuModalViewVisible);
+        }
+        const createMenuModalView = () => {
+
+        if (currentlyViewedRestaurant) return (
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={createMenuModalViewVisible}
+                onRequestClose={toggleCreateMenuModal}
+            >
+                {//change below to some type of list
+                }
+                <Text>{`Welcome ${username}`}</Text>
+                <Text>{`Here is the screen to edit ${currentlyViewedRestaurant.name}`}</Text>
+
+                <Text>{`You have ${currentlyViewedRestaurant.menus.length} menus.`}</Text>
+                
+                <Text>Create New Menu?</Text>
+                <TextInput 
+                    onChangeText={name=>changeNewMenuName(name)}
+                    value={newMenuName||""}
+                    placeholder={"New Menu"}
+                    />
+                <Button
+
+                    onPress={()=>{
+                        if(newMenuName) {
+                            console.log("here");
+                            let newRest = JSON.parse(JSON.stringify(currentlyViewedRestaurant));
+                            newRest.menus.push({"name":newMenuName, "menuItems": []});
+                            return changeCurrentlyViewedRestaurant(newRest), toggleCreateMenuModal();
+                        }
+                    }}
+                    title={`Create ${newMenuName}`}
+                
+                
+                    />
+
+            </Modal>
+        )
+        
+
+    }
     
+    const toggleEditRestaurantMenuModalViewVisibility = () => {
+        changeEditRestaurantMenuModalVisibility(!editRestaurantMenuModalVisible);
+    }
+    
+    
+    const editRestaurantMenuModalView = () => {
+
+        <Modal
+                animationType="slide"
+                transparent={false}
+                visible={editRestaurantMenuModalVisible}
+                onRequestClose={toggleEditRestaurantMenuModalViewVisibility}
+            >
+
+                <TextInput 
+                    onChangeText={name=>changeMenuItemName(name)}
+                    value={menuItemName||""}
+                    placeholder={"New Menu Item"}
+                    />
+                <TextInput 
+                    onChangeText={price=> {if (!Number.isNaN(price)) return changeMenuItemPrice(parseFloat(price).toFixed(2))}}
+                    value={menuItemPrice||""}
+                    placeholder={"$0.00"}
+                    />
+                <Button
+
+                    onPress={()=>console.log(`submitting changes to ${JSON.stringify(currentlyViewedRestaurant)} `),
+                     ()=>console.log(JSON.stringify({"name": menuItemName, "price" : menuItemPrice}),
+                     ()=>changeCurrentMenu(currentMenu.menu.concat({"name": menuItemName, "price" : menuItemPrice})),
+                     ()=>{
+                          let newLoginState = JSON.parse(JSON.stringify(loginState));
+                          let indexRest = newLoginState.ownedRestaurants.findIndex((val)=>val.name===currentlyViewedRestaurant.name);
+                          let indexMenu = newLoginState.ownedRestaurants[indexRest].menus.findIndex(val=>val.name===currentMenu.name);
+                          newLoginState.ownedRestaurants[indexRest].menus[indexMenu] = currentMenu;
+                          console.log(JSON.stringify(newLoginState));
+                          toggleEditRestaurantMenuModalViewVisibility();
+                          //could probably have modified currently Viewed Restaurant instead of bypassing it to go to loginstate.
+                     }
+                        )}
+                    title={`Submit Change`}
+                
+                
+                    />
+
+
+        </Modal>
+
+    }
     const editRestaurantModalView = () => {
 
         if (currentlyViewedRestaurant) return (
@@ -378,32 +479,44 @@ function ownerFlow (props) {
                 <Text>{`Welcome ${username}`}</Text>
                 <Text>{`Here is the menu to edit ${currentlyViewedRestaurant.name}`}</Text>
 
-                <Text>{`You have ${currentlyViewedRestaurant.menus.length} menu items.`}</Text>
-                
-                <TextInput 
-                    onChangeText={name=>changeMenuItemName(name)}
-                    value={menuItemName||""}
-                    placeholder={"New Menu Item"}
-                    />
-                <TextInput 
-                    onChangeText={price=> {if (!Number.isNaN(price)) return changeMenuItemPrice(parseFloat(price).toFixed(2))}}
-                    value={menuItemPrice||""}
-                    placeholder={"$0.00"}
-                    />
-                <Button
+                <Text>{`You have ${currentlyViewedRestaurant.menus.length} menus.`}</Text>
 
-                    onPress={()=>console.log(`submitting changes to ${JSON.stringify(currentlyViewedRestaurant)} `),
-                     ()=>console.log(JSON.stringify({"name": menuItemName, "price" : menuItemPrice}))}
-                    title={`Submit Change`}
-                
-                
+                <Button
+                    title="Create New Menu"
+                    onPress={toggleCreateMenuModal}
                     />
+                {createMenuModalView()}
+
+                {(currentlyViewedRestaurant.menus.length>0) ? 
+                    <FlatList
+                            data={currentlyViewedRestaurant.menus}
+                            renderItem={renderRestaurantMenu}
+                            keyExtractor={(item) => item.name}
+                            /> : <></> 
+                }
+
+
+                {editRestaurantMenuModalView()}
+                
+                
 
             </Modal>
         )
         
 
     }
+       const renderRestaurantMenu = ({item}) => (
+
+        <Card>
+            <Card.Title>{item.name}</Card.Title>
+            <Button onPress={()=>changeCurrentMenu(item), ()=>toggleEditRestaurantMenuModalViewVisibility()}
+                title={`Edit ${item.name} menu.`}/>
+
+            <Card.Divider />
+
+        </Card>
+
+  );
 
     const createRestaurantModalView = () => {
 
@@ -466,7 +579,7 @@ function ownerFlow (props) {
                 let json = await response.json();
                 console.log(JSON.stringify(json));
 
-                return changeCurrentlyViewedRestaurant(json),toggleEditRestaurantView();
+                return changeCurrentlyViewedRestaurant(json),toggleEditRestaurantMenuView();
 
             } catch (e) {
                 console.error(e);
