@@ -505,11 +505,18 @@ function ownerFlow (props) {
         
 
     }
+    const menuItemClicked = (item) => {
+        changeCurrentMenu(item);
+        toggleEditRestaurantMenuModalViewVisibility();
+        toggleEditRestaurantMenuModalViewVisibility(); 
+        console.log('should activate menu item edit modal' + editRestaurantMenuModalVisible);
+
+    }
        const renderRestaurantMenu = ({item}) => (
 
         <Card>
             <Card.Title>{item.name}</Card.Title>
-            <Button onPress={()=>changeCurrentMenu(item), ()=>toggleEditRestaurantMenuModalViewVisibility()}
+            <Button onPress={()=>menuItemClicked(item)}
                 title={`Edit ${item.name} menu.`}/>
 
             <Card.Divider />
