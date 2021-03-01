@@ -444,19 +444,20 @@ function ownerFlow (props) {
                     />
                 <Button
 
-                    onPress={()=>console.log(`submitting changes to ${JSON.stringify(currentlyViewedRestaurant)} `),
-                     ()=>console.log(JSON.stringify({"name": menuItemName, "price" : menuItemPrice}),
-                     ()=>changeCurrentMenu(currentMenu.menu.concat({"name": menuItemName, "price" : menuItemPrice})),
+                    onPress={()=>console.log(`submitting changes to ${JSON.stringify(currentlyViewedRestaurant)} restaurant `),
+                     ()=>console.log(JSON.stringify({"name": menuItemName, "price" : menuItemPrice})),
                      ()=>{
-                          let newLoginState = JSON.parse(JSON.stringify(loginState));
-                          let indexRest = newLoginState.ownedRestaurants.findIndex((val)=>val.name===currentlyViewedRestaurant.name);
-                          let indexMenu = newLoginState.ownedRestaurants[indexRest].menus.findIndex(val=>val.name===currentMenu.name);
-                          newLoginState.ownedRestaurants[indexRest].menus[indexMenu] = currentMenu;
-                          console.log(JSON.stringify(newLoginState));
-                          toggleEditRestaurantMenuModalViewVisibility();
-                          //could probably have modified currently Viewed Restaurant instead of bypassing it to go to loginstate.
+                        
+                        let newMenu = JSON.parse(JSON.stringify(currentMenu));
+                        
+                        newMenu.menuItems = newMenu.menuItems.concat({"name": menuItemName, "price" : menuItemPrice})
+                        return changeCurrentMenu(newMenu);
+
                      }
-                        )}
+                     
+                     
+                     
+                        }
                     title={`Submit Change`}
                 
                 
@@ -496,6 +497,8 @@ function ownerFlow (props) {
                             keyExtractor={(item) => item.name}
                             /> : <></> 
                 }
+
+                <Text>{(currentMenu) ? JSON.stringify(currentMenu) : "No menu selected"}</Text>
 
 
                 {editRestaurantMenuModalView()}
