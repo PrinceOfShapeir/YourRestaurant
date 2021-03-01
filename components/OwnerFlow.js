@@ -423,6 +423,7 @@ function ownerFlow (props) {
     
     
     const editRestaurantMenuModalView = () => {
+        return (
 
         <Modal
                 animationType="slide"
@@ -463,6 +464,7 @@ function ownerFlow (props) {
 
 
         </Modal>
+        )
 
     }
     const editRestaurantModalView = () => {
@@ -508,9 +510,6 @@ function ownerFlow (props) {
     const menuItemClicked = (item) => {
         changeCurrentMenu(item);
         toggleEditRestaurantMenuModalViewVisibility();
-        toggleEditRestaurantMenuModalViewVisibility(); 
-        console.log('should activate menu item edit modal' + editRestaurantMenuModalVisible);
-
     }
        const renderRestaurantMenu = ({item}) => (
 
