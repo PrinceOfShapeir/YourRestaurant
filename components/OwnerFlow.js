@@ -39,6 +39,7 @@ function ownerFlow (props) {
     const [createMenuModalViewVisible, changeCreateMenuModalView] = useState(false);
     const [newMenuName, changeNewMenuName] = useState("");
     const [currentMenu, changeCurrentMenu] = useState(null);
+    const [currentMenuIndex, changeCurrentMenuIndex] = useState(null);
     const [editRestaurantMenuModalVisible, changeEditRestaurantMenuModalVisibility] = useState(false);
     
 
@@ -450,8 +451,19 @@ function ownerFlow (props) {
                         
                         let newMenu = JSON.parse(JSON.stringify(currentMenu));
                         
-                        newMenu.menuItems = newMenu.menuItems.concat({"name": menuItemName, "price" : menuItemPrice})
-                        return changeCurrentMenu(newMenu);
+                         if(currentMenuIndex===null) {
+                             console.log(`current menu index is ${currentMenuIndex}`);
+                             console.log(currentMenu);
+                             console.log(newMenu.menuItems);
+                             newMenu.menuItems = newMenu.menuItems.concat({"name": menuItemName, "price" : menuItemPrice, "id": newMenu.menuItems.length});
+                             console.log(newMenu.menuItems);
+                            }
+                             else {
+                             console.log(`current menu index is ${currentMenuIndex}`)
+                             console.log(newMenu.menuItems);
+                             newMenu.menuItems[currentMenuIndex] = {"name": menuItemName, "price" : menuItemPrice, "id": currentMenuIndex}
+                         }
+                        return changeCurrentMenu(newMenu), changeCurrentMenuIndex(null), toggleEditRestaurantMenuModalViewVisibility();
 
                      }
                      
@@ -498,9 +510,15 @@ function ownerFlow (props) {
                             /> : <></> 
                 }
 
-                <Text>{(currentMenu) ? JSON.stringify(currentMenu) : "No menu selected"}</Text>
+                <Text>{(currentMenu) ? JSON.stringify(currentMenu.name) + " is selected" : "No menu selected"}</Text>
 
-
+                {(currentMenu&&currentMenu.menuItems.length>0) ? 
+                    <FlatList
+                            data={currentMenu.menuItems}
+                            renderItem={renderMenuItems}
+                            keyExtractor={(item) => item.id.toString()}
+                            /> : <></> 
+                }
                 {editRestaurantMenuModalView()}
                 
                 
@@ -510,15 +528,37 @@ function ownerFlow (props) {
         
 
     }
-    const menuItemClicked = (item) => {
-        changeCurrentMenu(item);
+
+    const changeMenuItem = (item) => {
+
+            console.log("attempting to open edit menu for " + item.name);
+            changeCurrentMenuIndex(item.id);
+            toggleEditRestaurantMenuModalViewVisibility();
+    }
+
+    const renderMenuItems = ({item}) => (
+
+        <Card>
+            <Card.Title>{item.name}</Card.Title>
+            <Text>{item.price}</Text>
+            <Button onPress={()=>changeMenuItem(item)}
+                title={`Edit ${item.name}.`}/>
+
+            <Card.Divider />
+
+        </Card>
+
+    )
+    const menuClicked = (item) => {
+        if(!currentMenu||currentMenu.name!=item.name) changeCurrentMenu(item);
+        changeCurrentMenuIndex(null);
         toggleEditRestaurantMenuModalViewVisibility();
     }
        const renderRestaurantMenu = ({item}) => (
 
         <Card>
             <Card.Title>{item.name}</Card.Title>
-            <Button onPress={()=>menuItemClicked(item)}
+            <Button onPress={()=>menuClicked(item)}
                 title={`Edit ${item.name} menu.`}/>
 
             <Card.Divider />
