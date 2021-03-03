@@ -422,6 +422,18 @@ function ownerFlow (props) {
         changeEditRestaurantMenuModalVisibility(!editRestaurantMenuModalVisible);
     }
     
+    const middleWareSyncMenu = (cb, menu) => {
+
+        let stagingRestaurant = JSON.parse(JSON.stringify(currentlyViewedRestaurant));
+        //console.log(JSON.stringify(stagingRestaurant));
+        let oldMenus = stagingRestaurant.menus;
+        
+
+        let index = oldMenus.findIndex((x)=>x.name===menu.name);
+        (index>=0) ? stagingRestaurant.menus[index] = menu : stagingRestaurant.menus.push(menu);
+        changeCurrentlyViewedRestaurant(stagingRestaurant);
+        return cb(menu);
+    }
     
     const editRestaurantMenuModalView = () => {
         return (
@@ -463,7 +475,7 @@ function ownerFlow (props) {
                              console.log(newMenu.menuItems);
                              newMenu.menuItems[currentMenuIndex] = {"name": menuItemName, "price" : menuItemPrice, "id": currentMenuIndex}
                          }
-                        return changeCurrentMenu(newMenu), changeCurrentMenuIndex(null), toggleEditRestaurantMenuModalViewVisibility();
+                        return middleWareSyncMenu(changeCurrentMenu, newMenu), changeCurrentMenuIndex(null), toggleEditRestaurantMenuModalViewVisibility();
 
                      }
                      
