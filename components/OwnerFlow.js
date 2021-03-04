@@ -200,7 +200,7 @@ function ownerFlow (props) {
                 value={username}
                 placeholder={"Username"}
                 />
-                <View style = {{flexDirection: "row"}}>
+                <View style = {styles.rowsWithIcons}>
 
                 <TextInput 
                     style={{flex:1}}
@@ -265,7 +265,7 @@ function ownerFlow (props) {
             value={username}
             placeholder={"Username"}
         />
-            <View style = {{flexDirection: "row"}}>
+            <View style = {styles.rowsWithIcons}>
 
                 <TextInput 
                     style={{flex:1}}
