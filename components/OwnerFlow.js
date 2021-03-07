@@ -403,7 +403,7 @@ function ownerFlow (props) {
                         if(newMenuName) {
                             console.log("here");
                             let newRest = JSON.parse(JSON.stringify(currentlyViewedRestaurant));
-                            newRest.menus.push({"name":newMenuName, "menuItems": []});
+                            newRest.menus.push({"name":newMenuName, "menuItems": [], "id":newRest.menus.length});
                             return changeCurrentlyViewedRestaurant(newRest), toggleCreateMenuModal();
                         }
                     }}
@@ -518,7 +518,7 @@ function ownerFlow (props) {
                     <FlatList
                             data={currentlyViewedRestaurant.menus}
                             renderItem={renderRestaurantMenu}
-                            keyExtractor={(item) => item.name}
+                            keyExtractor={(item) => item.id.toString()}
                             /> : <></> 
                 }
 
@@ -638,6 +638,11 @@ function ownerFlow (props) {
                 );
 
                 let json = await response.json();
+                
+
+                json.menus = json.menus.map((item, index) =>{
+                    return {...item, "id":index}
+                } );
                 console.log(JSON.stringify(json));
 
                 return changeCurrentlyViewedRestaurant(json),toggleEditRestaurantMenuView();
