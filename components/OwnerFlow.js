@@ -38,7 +38,7 @@ function ownerFlow (props) {
     const [newMenu, createNewMenu] = useState("");
     const [createMenuModalViewVisible, changeCreateMenuModalView] = useState(false);
     const [newMenuName, changeNewMenuName] = useState("");
-    const [currentMenu, changeCurrentMenu] = useState(null);
+    const [currentMenu, editCurrentMenu] = useState(null);
     const [currentMenuIndex, changeCurrentMenuIndex] = useState(null);
     const [editRestaurantMenuModalVisible, changeEditRestaurantMenuModalVisibility] = useState(false);
     
@@ -46,6 +46,15 @@ function ownerFlow (props) {
 
 
     const [loginModal, loginModalVisible] = useState(false);
+
+
+    
+
+    const changeCurrentMenu = (newMenu) => {
+
+        //potential for throwing a sync menu in here.
+        return editCurrentMenu(newMenu);
+    } 
 
     const toggleEditRestaurantMenuView = () => {
         toggleEditRestaurant(!editRestaurantModalViewVisible)
@@ -431,7 +440,8 @@ function ownerFlow (props) {
 
         let index = oldMenus.findIndex((x)=>x.name===menu.name);
         (index>=0) ? stagingRestaurant.menus[index] = menu : stagingRestaurant.menus.push(menu);
-        changeCurrentlyViewedRestaurant(stagingRestaurant);
+        changeCurrentlyViewedRestaurant(stagingRestaurant); //syncs to restaurant state
+        syncMenus(stagingRestaurant._id, username, stagingRestaurant.menus) //syncs to db, takes  (id, user, menus)
         return cb(menu);
     }
     
@@ -622,6 +632,36 @@ function ownerFlow (props) {
         </Card>
 
   );
+
+    const syncMenus = (id, user, menus) => {
+
+        const syncMenusAsync = async () => {
+             try{
+                let response = await fetch(
+                   restaurantUrl + `${id}/menu`, {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            "username": user,
+                            "newMenus": menus
+                        })
+                    }
+                );
+
+                let json = await response.json();
+                console.log("menu updated, new menu: " + JSON.stringify(json));
+
+             }
+                catch (e) {
+                    console.error(e);
+                }
+        }
+        return syncMenusAsync();
+
+    }
 
     const retrieveRestaurantInfo = (selectedRestaurant) => {
 
