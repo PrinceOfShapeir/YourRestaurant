@@ -641,6 +641,9 @@ function ownerFlow (props) {
                 
 
                 json.menus = json.menus.map((item, index) =>{
+                    item.menuItems = item.menuItems.map((menuItem, indice)=>{
+                        return {...menuItem, "id" : indice}
+                    })
                     return {...item, "id":index}
                 } );
                 console.log(JSON.stringify(json));
