@@ -4,6 +4,7 @@ import {Card} from 'react-native-elements';
 import {Picker} from '@react-native-community/picker';
 import {baseUrl} from '../shared/baseUrl';
 import { Ionicons } from '@expo/vector-icons';
+import CurrencyInput from 'react-native-currency-input';
 
 
 const combinedUrl = baseUrl + "owners/";
@@ -33,7 +34,7 @@ function ownerFlow (props) {
     const [currentlyViewedRestaurant, changeCurrentlyViewedRestaurant] = useState(null);
     //menu state
     const [menuItemName, changeMenuItemName] = useState("");
-    const [menuItemPrice, changeMenuItemPrice] = useState("");
+    const [menuItemPrice, changeMenuItemPrice] = useState(null);
 
     const [newMenu, createNewMenu] = useState("");
     const [createMenuModalViewVisible, changeCreateMenuModalView] = useState(false);
@@ -460,11 +461,17 @@ function ownerFlow (props) {
                     value={menuItemName||""}
                     placeholder={"New Menu Item"}
                     />
-                <TextInput 
-                    onChangeText={price=> {if (!Number.isNaN(price)) return changeMenuItemPrice(parseFloat(price).toFixed(2))}}
-                    value={menuItemPrice||""}
-                    placeholder={"$0.00"}
-                    />
+
+                <CurrencyInput 
+                    value={menuItemPrice||0.00}
+                    onChangeValue={changeMenuItemPrice}
+                    unit="$"
+                    delimiter=","
+                    separator="."
+                    precision={2}
+                
+                />
+                
                 <Button
 
                     onPress={()=>console.log(`submitting changes to ${JSON.stringify(currentlyViewedRestaurant)} restaurant `),
