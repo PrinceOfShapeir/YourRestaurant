@@ -492,7 +492,7 @@ function ownerFlow (props) {
                              console.log(newMenu.menuItems);
                              newMenu.menuItems[currentMenuIndex] = {"name": menuItemName, "price" : menuItemPrice, "id": currentMenuIndex}
                          }
-                        return middleWareSyncMenu(changeCurrentMenu, newMenu), changeCurrentMenuIndex(null), toggleEditRestaurantMenuModalViewVisibility();
+                        return middleWareSyncMenu(changeCurrentMenu, newMenu), changeCurrentMenuIndex(null), changeMenuItemName(null), toggleEditRestaurantMenuModalViewVisibility();
 
                      }
                      
@@ -562,6 +562,7 @@ function ownerFlow (props) {
 
             console.log("attempting to open edit menu for " + item.name);
             changeCurrentMenuIndex(item.id);
+            changeMenuItemName(item.name);
             toggleEditRestaurantMenuModalViewVisibility();
     }
 
