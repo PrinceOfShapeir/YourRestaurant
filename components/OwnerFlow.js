@@ -563,6 +563,7 @@ function ownerFlow (props) {
             console.log("attempting to open edit menu for " + item.name);
             changeCurrentMenuIndex(item.id);
             changeMenuItemName(item.name);
+            changeMenuItemPrice(item.price);
             toggleEditRestaurantMenuModalViewVisibility();
     }
 
@@ -579,16 +580,18 @@ function ownerFlow (props) {
         </Card>
 
     )
-    const menuClicked = (item) => {
-        if(!currentMenu||currentMenu.name!=item.name) changeCurrentMenu(item);
+    const menuClicked = (item, editing=false) => {
+        if(!currentMenu||currentMenu.id!=item.id) changeCurrentMenu(item);
         changeCurrentMenuIndex(null);
-        toggleEditRestaurantMenuModalViewVisibility();
+        if(!editing) toggleEditRestaurantMenuModalViewVisibility();
     }
        const renderRestaurantMenu = ({item}) => (
 
         <Card>
             <Card.Title>{item.name}</Card.Title>
             <Button onPress={()=>menuClicked(item)}
+                title={`Add new item to ${item.name} menu.`}/>
+            <Button onPress={()=>menuClicked(item, true)}
                 title={`Edit ${item.name} menu.`}/>
 
             <Card.Divider />
