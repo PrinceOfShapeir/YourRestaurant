@@ -582,8 +582,15 @@ function ownerFlow (props) {
     )
     const menuClicked = (item, editing=false) => {
         if(!currentMenu||currentMenu.id!=item.id) changeCurrentMenu(item);
-        changeCurrentMenuIndex(null);
-        if(!editing) toggleEditRestaurantMenuModalViewVisibility();
+            
+        
+        if(!editing) {
+            toggleEditRestaurantMenuModalViewVisibility();
+            changeCurrentMenuIndex(null);
+            changeMenuItemName(null);
+            changeMenuItemPrice(null);            
+        }
+
     }
        const renderRestaurantMenu = ({item}) => (
 
