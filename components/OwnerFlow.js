@@ -35,6 +35,7 @@ function ownerFlow (props) {
     //menu state
     const [menuItemName, changeMenuItemName] = useState("");
     const [menuItemPrice, changeMenuItemPrice] = useState(null);
+    const [menuItemDescription, changeMenuItemDescription] = useState(null);
 
     const [newMenu, createNewMenu] = useState("");
     const [createMenuModalViewVisible, changeCreateMenuModalView] = useState(false);
@@ -471,6 +472,11 @@ function ownerFlow (props) {
                     precision={2}
                 
                 />
+                <TextInput
+                    onChangeText={changeMenuItemDescription}
+                    value={menuItemDescription||""}
+                    placeholder={"description"}
+                />
                 
                 <Button
 
@@ -490,7 +496,7 @@ function ownerFlow (props) {
                              else {
                              console.log(`current menu index is ${currentMenuIndex}`)
                              console.log(newMenu.menuItems);
-                             newMenu.menuItems[currentMenuIndex] = {"name": menuItemName, "price" : menuItemPrice, "id": currentMenuIndex}
+                             newMenu.menuItems[currentMenuIndex] = {"name": menuItemName, "price" : menuItemPrice, "description": menuItemDescription, "id": currentMenuIndex}
                          }
                         return middleWareSyncMenu(changeCurrentMenu, newMenu), changeCurrentMenuIndex(null), changeMenuItemName(null), toggleEditRestaurantMenuModalViewVisibility();
 
@@ -564,6 +570,7 @@ function ownerFlow (props) {
             changeCurrentMenuIndex(item.id);
             changeMenuItemName(item.name);
             changeMenuItemPrice(item.price);
+            changeMenuItemDescription(item.description);
             toggleEditRestaurantMenuModalViewVisibility();
     }
 
@@ -572,6 +579,7 @@ function ownerFlow (props) {
         <Card>
             <Card.Title>{item.name}</Card.Title>
             <Text>{item.price}</Text>
+            <Text>{item.description}</Text>
             <Button onPress={()=>changeMenuItem(item)}
                 title={`Edit ${item.name}.`}/>
 
@@ -588,7 +596,8 @@ function ownerFlow (props) {
             toggleEditRestaurantMenuModalViewVisibility();
             changeCurrentMenuIndex(null);
             changeMenuItemName(null);
-            changeMenuItemPrice(null);            
+            changeMenuItemPrice(null);
+            changeMenuItemDescription(null);
         }
 
     }
