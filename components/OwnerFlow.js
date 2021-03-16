@@ -490,7 +490,7 @@ function ownerFlow (props) {
                              console.log(`current menu index is ${currentMenuIndex}`);
                              console.log(currentMenu);
                              console.log(newMenu.menuItems);
-                             newMenu.menuItems = newMenu.menuItems.concat({"name": menuItemName, "price" : menuItemPrice, "id": newMenu.menuItems.length});
+                             newMenu.menuItems = newMenu.menuItems.concat({"name": menuItemName, "price" : menuItemPrice, "description": menuItemDescription, "id": newMenu.menuItems.length});
                              console.log(newMenu.menuItems);
                             }
                              else {
@@ -666,7 +666,7 @@ function ownerFlow (props) {
              try{
                 let response = await fetch(
                    restaurantUrl + `${id}/menu`, {
-                        method: 'POST',
+                        method: 'PUT',
                         headers: {
                             Accept: 'application/json',
                             'Content-Type': 'application/json'
