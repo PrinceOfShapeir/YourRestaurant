@@ -19,7 +19,8 @@ class Main extends Component {
             storeEmail:'dummyEmail@dummy.dummy',
             customer: false,
             owner: false,
-            ownerState: "signed out"
+            ownerState: "signed out",
+            selecteRestaurant: null
         }
     }
 
@@ -106,6 +107,8 @@ class Main extends Component {
     }
 
     customerView = () => {
+
+        if(this.state.selectedRestaurant) {
         return (
                 <SafeAreaView>
                     
@@ -124,6 +127,14 @@ class Main extends Component {
                         />
 
                 </SafeAreaView>
+        )
+
+        }
+        else return (
+
+            <Text>
+                Please select a restaurant.
+            </Text>
         )
     }
 
