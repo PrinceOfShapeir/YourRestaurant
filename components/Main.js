@@ -4,7 +4,7 @@ import Menu from './Menu';
 import ShoppingCart from './ShoppingCart';
 import OwnerFlow from './OwnerFlow';
 import * as MailComposer from 'expo-mail-composer';
-import {Text, View, ScrollView, FlatList, SafeAreaView, Button} from 'react-native';
+import {Text, View, ScrollView, FlatList, Picker, SafeAreaView, Button} from 'react-native';
 
 class Main extends Component {
     constructor(props){
@@ -20,7 +20,8 @@ class Main extends Component {
             customer: false,
             owner: false,
             ownerState: "signed out",
-            selecteRestaurant: null
+            selecteRestaurant: null,
+            selectedRestuarantPickerValue: "nothing selected"
         }
     }
 
@@ -131,10 +132,29 @@ class Main extends Component {
 
         }
         else return (
-
+                <>
             <Text>
                 Please select a restaurant.
             </Text>
+
+            <Picker
+             selectedValue={this.selectedRestaurantPickerValue}
+             style={{ height: 50, width: 150 }}
+             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)} //change this
+        >
+        <Picker.Item label="Item 1" value="item1" />
+        <Picker.Item label="Item 2" value="item2" />
+                
+            </Picker>
+
+            <Button 
+                onPress={this.selectRestaurant}
+                title="Select Restaurant"
+            />
+
+            </>
+
+
         )
     }
 
