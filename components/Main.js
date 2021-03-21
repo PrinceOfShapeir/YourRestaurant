@@ -5,7 +5,10 @@ import ShoppingCart from './ShoppingCart';
 import OwnerFlow from './OwnerFlow';
 import * as MailComposer from 'expo-mail-composer';
 import {Text, View, ScrollView, FlatList, Picker, SafeAreaView, Button} from 'react-native';
+import {retrieveOpenRestaurants} from './customerDbCalls';
+import {baseUrl} from '../shared/baseUrl';
 
+const restaurantUrl = baseUrl + "restaurants/";
 class Main extends Component {
     constructor(props){
         super(props);
@@ -131,8 +134,19 @@ class Main extends Component {
         )
 
         }
-        else return (
-                <>
+        else  {
+
+            const openRestaurants =  async () => {
+
+                return await retrieveOpenRestaurants(restaurantUrl+"names");
+            }
+
+            openRestaurants().then(restaurants=>console.log(JSON.stringify(restaurants)))
+
+            
+
+        return (
+            <>
             <Text>
                 Please select a restaurant.
             </Text>
@@ -141,9 +155,9 @@ class Main extends Component {
              selectedValue={this.selectedRestaurantPickerValue}
              style={{ height: 50, width: 150 }}
              onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)} //change this
-        >
-        <Picker.Item label="Item 1" value="item1" />
-        <Picker.Item label="Item 2" value="item2" />
+            >
+            <Picker.Item label="Item 1" value="item1" />
+            <Picker.Item label="Item 2" value="item2" />
                 
             </Picker>
 
@@ -154,8 +168,10 @@ class Main extends Component {
 
             </>
 
+        
 
-        )
+
+        )}
     }
 
     customer = () => {

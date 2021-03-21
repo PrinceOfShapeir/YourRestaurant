@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CurrencyInput from 'react-native-currency-input';
 
 
+
 const combinedUrl = baseUrl + "owners/";
 const restaurantUrl = baseUrl + "restaurants/";
 
