@@ -23,8 +23,9 @@ class Main extends Component {
             customer: false,
             owner: false,
             ownerState: "signed out",
-            selecteRestaurant: null,
-            selectedRestuarantPickerValue: "nothing selected"
+            selectedRestaurant: null,
+            selectedRestuarantPickerValue: "nothing selected",
+            restaurantsToSelect: null
         }
     }
 
@@ -136,12 +137,57 @@ class Main extends Component {
         }
         else  {
 
-            const openRestaurants =  async () => {
+            if(!this.state.restaurantsToSelect){
 
-                return await retrieveOpenRestaurants(restaurantUrl+"names");
+                const openRestaurants =  async () => {
+
+                    return await retrieveOpenRestaurants(restaurantUrl+"names");
+                }
+
+                openRestaurants().then(restaurants=>{
+                    restaurants = restaurants.map(obj=>obj._id);
+                    console.log(JSON.stringify(restaurants))
+                    this.setState({
+                        restaurantsToSelect: restaurants
+                    });
+
+                
+                })
             }
 
-            openRestaurants().then(restaurants=>console.log(JSON.stringify(restaurants)))
+            
+
+            const restaurantSelector = (list) => {
+                if(list){
+                    console.log("there is a list");
+                    console.log(JSON.stringify(list)) //logs array of objects
+                    console.log(list.length); //returns 17
+
+                    return (
+
+                        <>
+                        <Picker
+                            selectedValue={this.state.selectedRestaurantPickerValue}
+                            style={{ height: 50, width: 150 }}
+                            onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)} //change this
+                            >
+                            {list.map((listedRestaurant) => 
+                                (<Picker.Item label={listedRestaurant.name||"what"} value={listedRestaurant._id||"what"} />))
+                            }
+                        </Picker>
+
+                        </>
+
+
+                    )
+                    
+                    /*return list.reduce(listedRestaurant => {
+                    return (<Picker.Item label={listedRestaurant.name} value={listedRestaurant._id} />)})*/
+                } else return (
+                    <Picker.Item label="Loading Items" value={null} />
+                )
+                            
+            }
 
             
 
@@ -151,18 +197,13 @@ class Main extends Component {
                 Please select a restaurant.
             </Text>
 
-            <Picker
-             selectedValue={this.selectedRestaurantPickerValue}
-             style={{ height: 50, width: 150 }}
-             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)} //change this
-            >
-            <Picker.Item label="Item 1" value="item1" />
-            <Picker.Item label="Item 2" value="item2" />
+            
+            {restaurantSelector(this.state.restaurantsToSelect)}
                 
-            </Picker>
+            
 
             <Button 
-                onPress={this.selectRestaurant}
+                onPress={console.log("select restaurant")/*this.selectRestaurant(this.state.selectedRestaurantPickerValue)*/}
                 title="Select Restaurant"
             />
 
