@@ -5,7 +5,7 @@ import ShoppingCart from './ShoppingCart';
 import OwnerFlow from './OwnerFlow';
 import * as MailComposer from 'expo-mail-composer';
 import {Text, View, ScrollView, FlatList, Picker, SafeAreaView, Button} from 'react-native';
-import {retrieveOpenRestaurants} from './customerDbCalls';
+import {retrieveOpenRestaurants, retrieveRestaurantInfo} from './customerDbCalls';
 import {baseUrl} from '../shared/baseUrl';
 
 const restaurantUrl = baseUrl + "restaurants/";
@@ -27,7 +27,8 @@ class Main extends Component {
             selectedRestaurantPickerValue: "nothing selected",
             restaurantsToSelect: null,
             selectedMenu: null,
-            selectedMenuPickerValue: null
+            selectedMenuPickerValue: null,
+            loadedRestaurant: null
         }
     }
 
@@ -136,6 +137,7 @@ class Main extends Component {
     customerView = () => {
 
         if(this.state.selectedRestaurant) {
+            console.log(this.state.selectedRestaurant);
 
             if(this.state.selectedMenu) {
 
@@ -159,6 +161,20 @@ class Main extends Component {
                         </SafeAreaView>
                 )}
             else {
+
+                    
+                const restaurantInfo =  async () => {
+
+                    
+
+                    return await retrieveRestaurantInfo(restaurantUrl,this.state.selectedRestaurant);
+                }
+
+                if(!this.state.loadedRestaurant) restaurantInfo().then(info=>{
+                    this.setState({loadedRestaurant: info});
+                    })
+                
+
               
 
                 return (
@@ -169,7 +185,7 @@ class Main extends Component {
                             style={{ height: 50, width: 150 }}
                             onValueChange={(itemValue, itemIndex) => this.setSelectedMenuPickerValue(itemValue)} //change this
                             >
-                            {(selectedRestaurant.menus.length>0) ? selectedRestaurant.menus.map((listedMenu) => 
+                            {(this.state.loadedRestaurant&&this.state.loadedRestaurant.menus&&this.state.loadedRestaurant.menus.length>0) ? this.state.loadedRestaurant.menus.map((listedMenu) => 
                                 (<Picker.Item label={listedMenu.name||"what"} value={listedMenu._id||"what"} />)) : 
                                 <Picker.Item label={"No Menus Available"} value={null} />
                                 //lets assume we have already mapped items using the {...menuItem, "id" : indice} convention
@@ -221,7 +237,7 @@ class Main extends Component {
                         <Picker
                             selectedValue={this.state.selectedRestaurantPickerValue}
                             style={{ height: 50, width: 150 }}
-                            onValueChange={(itemValue, itemIndex) => this.setSelectedRestaurant(itemValue)} //change this
+                            onValueChange={(itemValue, itemIndex) => this.setSelectedRestaurant(itemValue)&&console.log(itemValue)} //change this
                             >
                             {list.map((listedRestaurant) => 
                                 (<Picker.Item label={listedRestaurant.name||"what"} value={listedRestaurant._id||"what"} />))
@@ -255,7 +271,8 @@ class Main extends Component {
             
 
             <Button 
-                onPress={()=>console.log("select restaurant"),()=>this.selectRestaurant(this.state.selectedRestaurantPickerValue)}
+                onPress={()=>console.log("select restaurant" + this.state.selectedRestaurantPickerValue._id),()=>this.selectRestaurant(this.state.selectedRestaurantPickerValue)
+            }
                 title="Select Restaurant"
             />
 
