@@ -32,6 +32,10 @@ class Main extends Component {
         }
     }
 
+    changeMenu = (menu) => {
+        if(menu) this.setState({menu: menu})
+    }
+
 
     sendEmail = (items) => {
 
@@ -186,12 +190,16 @@ class Main extends Component {
                             onValueChange={(itemValue, itemIndex) => this.setSelectedMenuPickerValue(itemValue)} //change this
                             >
                             {(this.state.loadedRestaurant&&this.state.loadedRestaurant.menus&&this.state.loadedRestaurant.menus.length>0) ? this.state.loadedRestaurant.menus.map((listedMenu) => 
-                                (<Picker.Item label={listedMenu.name||"what"} value={listedMenu._id||"what"} />)) : 
+                                (<Picker.Item label={listedMenu.name||"what"} value={listedMenu||"what"} />)) : 
                                 <Picker.Item label={"No Menus Available"} value={null} />
                                 //lets assume we have already mapped items using the {...menuItem, "id" : indice} convention
                             }
                         </Picker>
 
+                        <Button 
+                            title="Select Menu"
+                            onPress={()=>this.setState({selectedMenu: this.state.selectedMenuPickerValue})}
+                        />
 
                     </>
 
