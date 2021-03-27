@@ -144,7 +144,8 @@ class Main extends Component {
             console.log(this.state.selectedRestaurant);
 
             if(this.state.selectedMenu) {
-
+                
+                console.log("should be returning the selected menu" + this.state.selectedMenu)
                 return (
                         <SafeAreaView>
                             
@@ -154,7 +155,7 @@ class Main extends Component {
                                 sendEmail={this.sendEmail}
                             />
                             <Menu 
-                                menu={this.state.menu}
+                                menu={this.state.selectedMenu}
                                 addToCart={this.addToCart}
                                 />
                             <Button 
