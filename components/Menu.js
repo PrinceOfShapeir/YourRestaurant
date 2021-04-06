@@ -37,20 +37,22 @@ function Menu (props) {
           <View>
             <Card /*style={{flex:1}}*/
                >
-                <Card.Title>{item.id.replace('-', " ")}</Card.Title>
+                <Card.Title>{item.name}</Card.Title>
             <View style={{flexDirection: 'row'}}>
                 <View>
                     <Text
                         style={{fontWeight: 'bold', fontSize:15}}
                     >{item.name}</Text>
-
+                    {/*
                     <Image style={{width: 50, height: 50}}
-                    source={{uri: baseUrl + item.imageName + jpeg}}
-                    />
+                        source={{uri: baseUrl + item.imageName + jpeg}}
+                    />*/
+                    }
+                    
                 </View>  
                 <View>
-                    <Text style={{marginTop:20, marginLeft: 10}}>{item.description}</Text>
-                    <Text style={{marginTop:5, marginLeft: 15}}>Only {item.price} bucks!</Text>
+                    <Text style={{marginTop:20, marginLeft: 10}}>{item.description||""}</Text>
+                    <Text style={{marginTop:5, marginLeft: 15}}>Only {item.price||0} bucks!</Text>
                 </View>          
 
                 </View>

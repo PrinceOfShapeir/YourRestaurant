@@ -131,31 +131,34 @@ class Main extends Component {
 
     setSelectedMenu = (value) => {
 
-        if(value) this.setState({selectedMenu: value})
+        console.log("should be selecting" + value);
+
+        if(value) this.setState({selectedMenu: value}, console.log("menu selected " + value))
     }
     setSelectedMenuPickerValue = (value) => {
 
         if(value) this.setState({selectedMenuPickerValue: value})
     }
 
+
     customerView = () => {
 
         if(this.state.selectedRestaurant) {
-            console.log(this.state.selectedRestaurant);
+            console.log("selected restaurant" + this.state.selectedRestaurant);
 
-            if(this.state.selectedMenu) {
+            if(this.state.selectedMenu!=null) {
                 
                 console.log("should be returning the selected menu" + this.state.selectedMenu)
                 return (
                         <SafeAreaView>
                             
                             <ShoppingCart 
-                                menu={this.state.menu}
+                                menu={this.state.loadedRestaurant.menus[this.state.selectedMenu]}
                                 shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
                                 sendEmail={this.sendEmail}
                             />
                             <Menu 
-                                menu={this.state.selectedMenu}
+                                menu={this.state.loadedRestaurant.menus[this.state.selectedMenu]}
                                 addToCart={this.addToCart}
                                 />
                             <Button 
@@ -176,7 +179,8 @@ class Main extends Component {
                 }
 
                 if(!this.state.loadedRestaurant) restaurantInfo().then(info=>{
-                    this.setState({loadedRestaurant: info});
+                    console.log(JSON.stringify(info.menus));
+                    this.setState({loadedRestaurant: info},()=>console.log(this.state.loadedRestaurant));
                     })
                 
 
@@ -191,7 +195,7 @@ class Main extends Component {
                             onValueChange={(itemValue, itemIndex) => this.setSelectedMenuPickerValue(itemValue)} //change this
                             >
                             {(this.state.loadedRestaurant&&this.state.loadedRestaurant.menus&&this.state.loadedRestaurant.menus.length>0) ? this.state.loadedRestaurant.menus.map((listedMenu) => 
-                                (<Picker.Item label={listedMenu.name||"what"} value={listedMenu||"what"} />)) : 
+                                (<Picker.Item label={listedMenu.name||"what"} value={listedMenu.id} />)) : 
                                 <Picker.Item label={"No Menus Available"} value={null} />
                                 //lets assume we have already mapped items using the {...menuItem, "id" : indice} convention
                             }
@@ -199,7 +203,9 @@ class Main extends Component {
 
                         <Button 
                             title="Select Menu"
-                            onPress={()=>this.setState({selectedMenu: this.state.selectedMenuPickerValue})}
+                            //selectedMenu is now the index of the menu in this.state.loadedRestaurant.menus
+                            //did this because Array.map seems to be losing the nested data, or the value prop in picker can't handle it
+                            onPress={this.setSelectedMenu(this.state.selectedMenuPickerValue)}
                         />
 
                     </>
