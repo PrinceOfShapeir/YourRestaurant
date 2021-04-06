@@ -153,12 +153,13 @@ class Main extends Component {
                         <SafeAreaView>
                             
                             <ShoppingCart 
-                                menu={this.state.loadedRestaurant.menus[this.state.selectedMenu]}
+                                menu={this.state.loadedRestaurant.menus[this.state.selectedMenu].menuItems}
                                 shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
                                 sendEmail={this.sendEmail}
                             />
+                            
                             <Menu 
-                                menu={this.state.loadedRestaurant.menus[this.state.selectedMenu]}
+                                menu={this.state.loadedRestaurant.menus[this.state.selectedMenu].menuItems}
                                 addToCart={this.addToCart}
                                 />
                             <Button 
@@ -205,7 +206,7 @@ class Main extends Component {
                             title="Select Menu"
                             //selectedMenu is now the index of the menu in this.state.loadedRestaurant.menus
                             //did this because Array.map seems to be losing the nested data, or the value prop in picker can't handle it
-                            onPress={this.setSelectedMenu(this.state.selectedMenuPickerValue)}
+                            onPress={()=>this.setSelectedMenu(this.state.selectedMenuPickerValue)}
                         />
 
                     </>

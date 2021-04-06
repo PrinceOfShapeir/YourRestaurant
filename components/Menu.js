@@ -35,6 +35,8 @@ function Menu (props) {
            
             
           <View>
+
+              <Text>{JSON.stringify(menu)}</Text>
             <Card /*style={{flex:1}}*/
                >
                 <Card.Title>{item.name}</Card.Title>
