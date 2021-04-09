@@ -54,7 +54,7 @@ function Menu (props) {
                 </View>  
                 <View>
                     <Text style={{marginTop:20, marginLeft: 10}}>{item.description||""}</Text>
-                    <Text style={{marginTop:5, marginLeft: 15}}>Only {item.price||0} bucks!</Text>
+                    <Text style={{marginTop:5, marginLeft: 15}}>Only ${item.price||0} bucks!</Text>
                 </View>          
 
                 </View>

@@ -191,7 +191,7 @@ class Main extends Component {
                     <>
 
                         <Picker
-                            selectedValue={this.state.selectedMenuPickerValue}
+                            selectedValue={this.state.selectedMenuPickerValue||"Please Select a Menu"}
                             style={{ height: 50, width: 150 }}
                             onValueChange={(itemValue, itemIndex) => this.setSelectedMenuPickerValue(itemValue)} //change this
                             >
