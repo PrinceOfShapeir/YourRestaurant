@@ -10,7 +10,7 @@ const jpeg = '.jpg';
 
 function Menu (props) {
 
-    let {menu, addToCart, toggleModal} = props;
+    let {menu, addToCart, restaurant, toggleModal} = props;
     //let {menu} = props;
 /*
     const addToCart = (item, quantity=1) => {
@@ -77,7 +77,8 @@ function Menu (props) {
 
         return (
             
-            
+            <>
+                <Text>{JSON.stringify(restaurant)}</Text>
             
                 <FlatList
 
@@ -91,6 +92,8 @@ function Menu (props) {
                     </Card>}
                     >
                 </FlatList>
+
+            </>
         
         );
 

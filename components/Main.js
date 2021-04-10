@@ -157,10 +157,10 @@ class Main extends Component {
                                 shoppingCartItem={(this.state.shoppingCartItem!=null) ? this.state.shoppingCartItem : null}
                                 sendEmail={this.sendEmail}
                             />
-                            
                             <Menu 
                                 menu={this.state.loadedRestaurant.menus[this.state.selectedMenu].menuItems}
                                 addToCart={this.addToCart}
+                                restaurant={this.state.loadedRestaurant}
                                 />
                             <Button 
                                 onPress={this.returnHome}
@@ -191,7 +191,7 @@ class Main extends Component {
                     <>
 
                         <Picker
-                            selectedValue={this.state.selectedMenuPickerValue||"Please Select a Menu"}
+                            selectedValue={this.state.selectedMenuPickerValue}
                             style={{ height: 50, width: 150 }}
                             onValueChange={(itemValue, itemIndex) => this.setSelectedMenuPickerValue(itemValue)} //change this
                             >
